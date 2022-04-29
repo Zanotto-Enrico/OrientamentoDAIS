@@ -1,0 +1,182 @@
+
+@font-face {
+    src: url(fonts/MYRIADPRO-REGULAR.OTF);
+    font-family: myriad-regular
+}
+@font-face {
+    src: url(fonts/MYRIADPRO-BOLD.OTF);
+    font-family: myriad-bold
+}
+/*
+:root {
+    --color1: #6874d0;
+    --color2: #8690da;
+    --color3: #3ae8e1;              // vecchi colori
+    --color4: #ffffff;
+    --color5: #505ec8;
+}
+*/
+:root {
+    --color1: #f8f9fa;     /* quasi bianco */
+    --color2: #ff0a54;     /* chiaro       */
+    --color3: #333333;     /* grigio       */
+    --color4: #7a0025;     /* scuro        */
+    --color5: #ac0033;     /* normale      */
+    
+}
+
+.centralbodylogin{
+
+    position: absolute;
+    top:0;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+
+    width: 480px;
+    height: 350px;
+
+    margin: auto;
+
+}
+
+.centralbodyregister{
+
+    position: absolute;
+    top:0;
+    bottom: 110px;
+    left: 0;
+    right: 0;
+
+    width: 480px;
+    height: 350px;
+
+    margin: auto;
+
+}
+
+
+.loginpanel {
+    width: 480px;
+    height: 287px;
+    background-color: var(--color5);
+
+    border-radius: 20px;
+    
+    box-sizing: border-box;
+    /*padding: 45px;*/
+    
+    margin: auto;
+
+    box-shadow: 20px 20px 20px lightgrey;
+}
+
+.registerpanel {
+    width: 480px;
+    height: 347px;
+    background-color: var(--color5);
+
+    border-radius: 20px;
+    
+    box-sizing: border-box;
+    /*padding: 45px;*/
+    
+    margin: auto;
+
+    box-shadow: 20px 20px 20px lightgrey;
+}
+
+.imgtitle{
+    width: 400px;
+    height: 33.3px;
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-bottom: 46.7px;
+}
+
+body
+{
+    background-color: var(--color1);
+}
+
+.divtextbox{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.divsubmit{
+    text-align: center;
+    padding-top: 20px;
+}
+
+#sub{
+
+    font-size: 22px;
+    color:var(--color5);
+    width: 390px;
+    height: 40px;
+    background-color: var(--color1);
+
+    font-family: "myriad-bold";
+    border:none;
+    border-radius: 20px;
+}
+
+.textbox{
+
+    background-color: var(--color1);
+    color: var(--color4);
+    width: 390px;
+    height: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    border:none;
+    text-align: center;
+    border-radius: 3px;
+}
+
+
+.divhref {
+    padding-top: 20px;
+    text-align: center;
+}
+
+s4{
+    color: var(--color5);
+    font-size: 18px;
+    font-family: "myriad-regular";
+}
+
+.divtitle{
+    text-align: center;
+    padding: 20px;
+}
+
+s3{
+    color: var(--color1);
+    font-size: 22px;
+    font-family: "myriad-bold";
+}
+
+
+a{
+    margin: auto;
+    font-size: 18px;
+    color:var(--color4);
+    font-weight: bold;
+    font-family: "myriad-bold";
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--color4);
+    opacity: 1; /* Firefox */
+}
+
+input:focus::placeholder {
+    color: transparent;
+}
+input::-webkit-input-placeholder {
+    opacity: 0.3; /*Change the opacity between 0 and 1*/
+}
+
+

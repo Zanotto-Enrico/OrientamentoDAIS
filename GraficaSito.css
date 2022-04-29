@@ -1,0 +1,31 @@
+
+@font-face {
+    src: url(fonts/MYRIADPRO-REGULAR.OTF);
+    font-family: myriad-regular
+}
+@font-face {
+    src: url(fonts/MYRIADPRO-BOLD.OTF);
+    font-family: myriad-bold
+}
+
+:root {
+    --color1: #f8f9fa;     /* quasi bianco */
+    --color2: #ff0a54;     /* chiaro       */
+    --color3: #333333;     /* grigio       */
+    --color4: #7a0025;     /* scuro        */
+    --color5: #ac0033;     /* normale      */
+    
+}
+
+
+header{
+    background-color: var(--color5);
+    margin: -8px;
+}
+
+.imgtitle{
+    width: 400px;
+    height: auto;
+    
+    padding: 30px
+}
