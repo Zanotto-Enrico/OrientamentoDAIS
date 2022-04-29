@@ -169,7 +169,7 @@ a{
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: var(--color4);
-    opacity: 1; /* Firefox */
+    opacity: 0.3; /* Firefox */
 }
 
 input:focus::placeholder {
