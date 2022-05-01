@@ -1,12 +1,12 @@
-
 @font-face {
     src: url(fonts/MYRIADPRO-REGULAR.OTF);
-    font-family: myriad-regular
+    font-family: myriadregular
 }
 @font-face {
     src: url(fonts/MYRIADPRO-BOLD.OTF);
-    font-family: myriad-bold
+    font-family: myriadbold
 }
+
 /*
 :root {
     --color1: #6874d0;
@@ -34,7 +34,7 @@
     right: 0;
 
     width: 480px;
-    height: 350px;
+    height: 349px;
 
     margin: auto;
 
@@ -117,7 +117,7 @@ body
     height: 40px;
     background-color: var(--color1);
 
-    font-family: "myriad-bold";
+    font-family: "myriadbold";
     border:none;
     border-radius: 20px;
 }
@@ -144,7 +144,7 @@ body
 s4{
     color: var(--color5);
     font-size: 18px;
-    font-family: "myriad-regular";
+    font-family: "myriadregular";
 }
 
 .divtitle{
@@ -155,7 +155,7 @@ s4{
 s3{
     color: var(--color1);
     font-size: 22px;
-    font-family: "myriad-bold";
+    font-family: "myriadbold";
 }
 
 
@@ -164,7 +164,7 @@ a{
     font-size: 18px;
     color:var(--color4);
     font-weight: bold;
-    font-family: "myriad-bold";
+    font-family: "myriadbold";
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

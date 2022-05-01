@@ -1,11 +1,11 @@
 
 @font-face {
     src: url(fonts/MYRIADPRO-REGULAR.OTF);
-    font-family: myriad-regular
+    font-family: myriadregular
 }
 @font-face {
     src: url(fonts/MYRIADPRO-BOLD.OTF);
-    font-family: myriad-bold
+    font-family: myriadbold
 }
 
 :root {
@@ -56,7 +56,7 @@ header{
     background-color: #ac0033;
     border: none;
     color: #f8f9fa;
-    font-family: myriad-regular;
+    font-family: myriadregular;
     font-size: 25px;
 }
 

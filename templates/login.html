@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="GraficaLogin.css">
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/GraficaLogin.css') }}">
     </head>
     <body>
-        <div class="centralbodyregister">
-            <img src="./imgs/logored.png" class="imgtitle" />
-            <div class="registerpanel">
+        <div class="centralbodylogin">
+            <img src="{{url_for('static', filename='imgs/logored.png')}}" class="imgtitle" />
+            <div class="loginpanel">
 
                 <div class= "divtitle">
-                    <s3>Registrazione</s3>
+                    <s3>Login</s3>
                 </div>
 
                 <form method="post" action="">
@@ -19,18 +19,15 @@
                     <div class="divtextbox">
                         <input type = "password" name = "password" placeholder="password" required class="textbox">
                     </div>
-                    <div class="divtextbox">
-                        <input type = "password" name = "conferma" placeholder="conferma password" required class="textbox">
-                    </div>
                     <div class="divsubmit">
-                        <input class="okbtn" type="submit" name = "submit" id = "sub" value="Registrati">
+                        <input class="okbtn" type="submit" name = "submit" id = "sub" value="Accedi">
                     </div>
                 </form>
 
             </div>
             <div class="divhref">
-                <s4>sei gi&agrave; registrato?  </s4>
-                <a href="index.html" >Accedi</a>
+                <s4>non sei registrato?  </s4>
+                <a href="register" >Registrati</a>
             </div>
         </div>
     </body>
