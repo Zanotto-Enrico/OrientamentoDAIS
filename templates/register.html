@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/GraficaLogin.css') }}">
+		<link rel= "stylesheet" href= "{{ url_for('static',filename='styles/GraficaLogin.css') }}">
     </head>
     <body>
         <div class="centralbodyregister">
@@ -12,7 +12,7 @@
                     <s3>Registrazione</s3>
                 </div>
 
-                <form method="post" action="register">
+                <form method="post" action="/register">
                     <div class="divtextbox">
                         <input type = "text" name = "username" placeholder="username" required class="textbox" >
                         </div>
@@ -29,6 +29,15 @@
 
             </div>
             <div class="divhref">
+                {%if result=="effettuata"%}
+				<s4>Registrazione avvenuta con successo!<br><br></s4>
+                {%endif%} 
+                {%if result=="fallita"%}
+				<s4>Registrazione fallita, Controlla i dati inseriti!<br><br></s4>
+                {%endif%} 
+                {%if result=="giaEsistente"%}
+				<s4>Registrazione fallita, Account già esistente!<br><br></s4>
+				{%endif%} 
                 <s4>sei gi&agrave; registrato?  </s4>
                 <a href="login" >Accedi</a>
             </div>

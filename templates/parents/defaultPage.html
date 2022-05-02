@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<link rel= "stylesheet" href= "{{ url_for('static',filename='styles/GraficaSito.css') }}">
+        {% block titolo %}          
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <div class="header-container" >
+                <img src="{{url_for('static', filename='imgs/logo.png')}}" class="imgtitle" />
+                <div class="btn-container">
+                    {% block bottoni %}
+                    {% endblock %}
+                </div>
+
+            </div>
+        </header>
+
+        <div class="body">
+		
+            {% block contenuto %}          
+            {% endblock %}
+        </div>
+        
+    </body>
+</html>

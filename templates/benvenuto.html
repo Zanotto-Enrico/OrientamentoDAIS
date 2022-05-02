@@ -1,0 +1,14 @@
+{% if false %}
+        {% extends "parents/defaultPageStudente.html" %} 
+{% else %}
+        {% extends "parents/defaultPageProfessore.html" %}
+{% endif %}
+
+{% block titolo %}
+    <title>Benvenuto</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1>Benvenuto {{user}}!</h1> 
+{% endblock %}

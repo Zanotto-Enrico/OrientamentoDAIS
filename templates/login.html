@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/GraficaLogin.css') }}">
+		<link rel= "stylesheet" href= "{{ url_for('static', filename='styles/GraficaLogin.css') }}">
     </head>
     <body>
         <div class="centralbodylogin">
@@ -12,7 +12,7 @@
                     <s3>Login</s3>
                 </div>
 
-                <form method="post" action="">
+                <form method="POST" action="/login">
                     <div class="divtextbox">
                         <input type = "text" name = "username" placeholder="username" required class="textbox" >
                         </div>
@@ -26,7 +26,12 @@
 
             </div>
             <div class="divhref">
-                <s4>non sei registrato?  </s4>
+				
+				{%if fallito%}
+				<s4>Errore in fase di autenticazione!<br><br></s4>
+				{%endif%} 
+                
+				<s4>non sei registrato?  </s4>
                 <a href="register" >Registrati</a>
             </div>
         </div>
