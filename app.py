@@ -57,6 +57,14 @@ def benvenuto ():
 	else:
 		return redirect(url_for("login"))
 
+#Carica la pagina con la lista dei corsi disponibili
+@app.route ('/listaCorsi', methods=['GET'])
+def listaCorsi ():
+	if "user" in session:
+		return render_template("listaCorsi.html")
+	else:
+		return redirect(url_for("login"))
+
 #Effettua il logout dalla sessione
 @app.route ('/logout', methods=['GET'])
 def logout():

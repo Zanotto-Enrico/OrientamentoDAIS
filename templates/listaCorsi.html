@@ -1,0 +1,67 @@
+{% if false %}
+        {% extends "parents/defaultPageStudente.html" %} 
+{% else %}
+        {% extends "parents/defaultPageProfessore.html" %}
+{% endif %}
+
+{% block titolo %}
+    <title>Lista corsi</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1> Lista Corsi</h1>
+    <div class="divfiltro">
+        <select name="FiltraCategoria" class="filtro" >
+            <option value="Filtra per categoria">Filtra per categoria</option>
+            <option value="Arti e discipline umanistiche">Arti e discipline umanistiche</option>
+            <option value="Comunicazione e eventi">Comunicazione e eventi</option>
+            <option value="Internazionalizzazione">Internazionalizzazione</option>
+            <option value="Lingue e culture">Lingue e culture</option>
+            <option value="Scienze e tecnologia">Scienze e tecnologia</option>
+          </select>
+    </div>
+    <div class="divListaCorsi">
+        <table class="elencoCorsi">
+            <colgroup>
+                <col>
+                <col style="width: 17%">
+                <col style="width: 25%">
+                <col style="width: 25%">
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th> Modalit&aacute; </th>
+                    <th> Struttura </th>
+                    <th> Titolo del progetto </th>
+                    <th> Durata </th>
+                    <th> Iscrizioni </th>
+                    <th> Dettagli </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> In Presenza </td>
+                    <td> Centro Studi sulle Arti della Russia </td>
+                    <td> Organizzazione di eventi culturali 
+                         L'arte ai giovani! Incontriamo l'arte russa </td>
+                    <td> 30 ore </td>
+                    <td> aperte </td>
+                    <td> <button class="btnInfoCorso">Info</button> </td>
+                </tr>
+                <tr>
+                    <td> Online </td>
+                    <td> Dipartimento di Scienze Ambientali </td>
+                    <td> Laboratorio di Intelligenza Artificaiale
+                         avanzata: Regressione lineare e adversarial machine
+                         learning </td>
+                    <td> 6 ore </td>
+                    <td> chiuse </td>
+                    <td> <button class="btnInfoCorso">Info</button>  </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

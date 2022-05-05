@@ -1,10 +1,10 @@
 @font-face {
-    src: url(fonts/MYRIADPRO-REGULAR.OTF);
-    font-family: myriadregular
+    src: url(fonts/OpenSans/OpenSans-Regular.ttf);
+    font-family: OpenSans-Regular
 }
 @font-face {
-    src: url(fonts/MYRIADPRO-BOLD.OTF);
-    font-family: myriadbold
+    src: url(fonts/OpenSans/OpenSans-Bold.ttf);
+    font-family: OpenSans-Bold
 }
 
 /*
@@ -117,7 +117,7 @@ body
     height: 40px;
     background-color: var(--color1);
 
-    font-family: "myriadbold";
+    font-family: "OpenSans-Bold";
     border:none;
     border-radius: 20px;
 }
@@ -144,7 +144,7 @@ body
 s4{
     color: var(--color5);
     font-size: 18px;
-    font-family: "myriadregular";
+    font-family: "OpenSans-Regular";
 }
 
 .divtitle{
@@ -155,7 +155,7 @@ s4{
 s3{
     color: var(--color1);
     font-size: 22px;
-    font-family: "myriadbold";
+    font-family: "OpenSans-Bold";
 }
 
 
@@ -164,7 +164,7 @@ a{
     font-size: 18px;
     color:var(--color4);
     font-weight: bold;
-    font-family: "myriadbold";
+    font-family: "OpenSans-Bold";
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

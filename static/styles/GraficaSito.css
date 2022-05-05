@@ -1,11 +1,11 @@
 
 @font-face {
-    src: url(fonts/MYRIADPRO-REGULAR.OTF);
-    font-family: myriadregular
+    src: url(fonts/OpenSans/OpenSans-Regular.ttf);
+    font-family: OpenSans-Regular
 }
 @font-face {
-    src: url(fonts/MYRIADPRO-BOLD.OTF);
-    font-family: myriadbold
+    src: url(fonts/OpenSans/OpenSans-Bold.ttf);
+    font-family: OpenSans-Bold
 }
 
 :root {
@@ -17,7 +17,29 @@
     
 }
 
-
+h0{
+    font-size: 40px;
+    padding-left: 40px;
+    font-family: "OpenSans-Bold";
+}
+h1{
+    font-size: 32px;
+    padding-left: 40px;
+    padding-top: 20px;
+    font-family: "OpenSans-Bold";
+}
+h2{
+    font-size: 26px;
+    font-family: "OpenSans-Regular";
+}
+h3{
+    font-size: 22px;
+    font-family: "OpenSans-Regular";
+}
+h4{
+    font-size: 20px;
+    font-family: "OpenSans-Regular";
+}
 header{
     width:100%;
     background-color: var(--color5);
@@ -38,7 +60,7 @@ header{
 
 .header-container{
     width: 1200px;
-    height: 60px;
+    height: 56px;
     display:flex;
     justify-content: space-between;
     align-items: left;
@@ -56,8 +78,8 @@ header{
     background-color: #ac0033;
     border: none;
     color: #f8f9fa;
-    font-family: myriadregular;
-    font-size: 25px;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
 }
 
 .menubtn:hover {
@@ -78,5 +100,70 @@ body{
 {
     background-color:#f8f9fa;
     width: 1200px;
-    height: 2000px;
 }
+
+.divfiltro{
+    text-align: center;
+}
+
+.filtro{
+    margin-top: 20px;
+    position: center;
+    font-family: "OpenSans-Regular";
+    font-size: 16pt;
+    width:700px;
+    height: 50px;
+    border-radius: 20px;
+    text-align: center;
+    border-width: 2px;
+    border-color: #333333;
+    background-color: #f8f9fa;
+
+    box-shadow: 20px 20px 20px lightgrey;
+}
+
+.divListaCorsi{
+
+    margin-top: 60px;
+}
+.btnInfoCorso{
+    height: 70px;
+    width: 100%;
+    background-color: #ac0033;
+    border: none;
+    border-radius: 4px;
+    background: url(/static/imgs/info.png);
+    background-size: 30%;
+    background-position: center;
+    background-position-y: 27%;
+    background-repeat: no-repeat;
+    background-color: #ac0033;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 16px;
+    padding-top: 35%;
+}
+
+.elencoCorsi{
+    width:100%;
+    border-collapse: collapse;
+    
+}
+th {
+    padding: 15px;
+
+    font-family: "OpenSans-Bold";
+    text-align:left;
+    border-bottom: 3px solid black;
+}
+td {
+    vertical-align: top;
+    text-align: left;
+    padding: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-family: "OpenSans-Regular";
+    border-bottom: 1px solid lightgray;
+
+}
+
