@@ -84,9 +84,11 @@ header{
 
 .menubtn:hover {
     background-color:#7a0025;
-    transition: 0.7s;
 }
+.menubtn:active {
 
+    background-color:#ac0033;
+}
 
 body{
     background-color: #f8f9fa;
@@ -167,3 +169,264 @@ td {
 
 }
 
+.div-form-creazione{
+    padding-left: 120px;
+    padding-top: 30px;
+    font-family: OpenSans-Regular;
+    font-size: 16px;
+}
+
+.label1{
+    font-family: OpenSans-Bold;
+    font-size: 18px;
+    display: inline-block;
+    margin: 10px;
+    margin-bottom: 14px;
+}
+.label2{
+    font-family: OpenSans-Bold;
+    font-size: 18px;
+    display: inline-block;
+    margin: 10px;
+    margin-bottom: 0px;
+}
+.label3{
+    font-family: OpenSans-Bold;
+    font-size: 18px;
+    margin-top: 10px;
+    display: inline-block;
+    width: 110px;
+    text-align: center;
+}
+
+.div-textbox{
+    margin-bottom: 15px;
+}
+.div-time{
+    margin-bottom: 25px;
+    margin-top: 25px;
+    display: none;
+    flex-direction: left;
+    justify-content: left;
+}
+
+.div-num{
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.input-label-1 {
+    font-size: 16px;
+    font-family: OpenSans-Regular;
+    padding: 10px;
+    width: 80%;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+}
+.input-label-2 {
+    resize: none;
+    width: 95%;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    font-family: OpenSans-Regular;
+}
+
+.input-number-1 {
+    width: 50px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    font-family: OpenSans-Regular;
+}
+
+.input-dropdown-1{
+    width: 200px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #ffffff;
+    font-family: OpenSans-Regular;
+}
+
+.dropdown-week{
+    width: 300px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #ffffff;
+    font-family: OpenSans-Regular;
+}
+
+.dropdown-time{
+    width: 80px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #ffffff;
+    font-family: OpenSans-Regular;
+}
+.div-checkbox{
+    display:flex;
+    flex-direction: row;
+}
+
+.container-check {
+    display:flex;
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: OpenSans-Bold;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  .container-check input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border: solid #333333;
+    border-width: 1px;
+  }
+  .container-check:hover input ~ .checkmark {
+    background-color: #fff;
+  }
+  .container-check input:checked ~ .checkmark {
+    background-color: #ac0033;
+  }
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .container-check input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .container-check .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+.column {
+    float: left;
+    width: 40%;
+}
+
+.divider {
+    float: left;
+    background-color: #ac0033;
+    width: 2px;
+    height: 600px;
+    margin-left: 8%;
+    margin-right: 8%;
+    margin-top: 30px;
+}
+
+.btnCrea{
+    height: 60px;
+    width: 200px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    background-color: #ac0033;
+    border: none;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-left: 5%;
+    
+}
+
+.btnCrea:hover {
+    background-color:#7a0025;
+    transition: 0.1s;
+}
+
+.btnCrea:active {
+
+    background-color:#ac0033;
+}
+
+.container-settimana {
+    display:flex;
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 80px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: OpenSans-Bold;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.container-settimana input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.checkmarksettimana {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: 60px;
+    background-color: #fff;
+    border: solid #333333;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+.container-settimana:hover input ~ .checkmarksettimana {
+    background-color: #fff;
+}
+.container-settimana input:checked ~ .checkmarksettimana {
+    background-color: #ac0033;
+    border-left-color: #f8f9fa;
+    color: #f8f9fa;
+}
+.checkmarksettimana:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.container-settimana input:checked ~ .checkmarksettimana:after {
+    display: block;
+}

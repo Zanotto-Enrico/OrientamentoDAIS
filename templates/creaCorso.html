@@ -1,0 +1,142 @@
+{% if false %}
+        {% extends "parents/defaultPageStudente.html" %} 
+{% else %}
+        {% extends "parents/defaultPageProfessore.html" %}
+{% endif %}
+
+{% block titolo %}
+    <title>Creazione corso</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1> Creazione corso</h1>
+    <div class="div-form-creazione">
+        <form>
+            <div class="column">
+            
+                <div class="div-textbox">
+                    <label  class="label1">Nome del corso</label><br>
+                    <input type="text" class="input-label-1" id="name" required="yes">
+                </div>
+                <div class="div-textbox">
+                    <label  class="label1">Struttura o edificio</label><br>
+                    <input type="text" class="input-label-1" id="place" required="yes">
+                </div>
+                <div class="div-num">
+                    <label class="label1">Numero di partecipanti</label><br>
+                    <label class="label1">Minimo</label>
+                    <input type="number" class="input-number-1" id="num-min" min="1" max="999" value="0">
+                    <label class="label1">Massimo</label>
+                    <input type="number" class="input-number-1" id="num-max" min="1" max="999" value="0">
+                </div>
+                <div class="div-textbox">
+                    <label class="label1">Tipologia </label>
+                    <select name="tipologia" class="input-dropdown-1" id="type">
+                        <option value="presenza">In Presenza</option>
+                        <option value="online">Online</option>
+                    </select>
+                </div>
+                <div class="div-textbox">
+                    <label  class="label1">Breve descrizione   (max 300 lettere)</label><br>
+                    <textarea class="input-label-2" rows="5" id = "description" maxlength="300" required="yes"></textarea><br>
+                </div>
+                <div class="div-checkbox">
+                    <label class="container-check">Aprire le iscrizioni da subito?
+                        <input type="checkbox" id="Check1">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+                <label  class="label1">Giorni di lezione</label><br>
+                <div class="div-checkbox">
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('lun')">
+                        <span class="checkmarksettimana">Lun</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('mar')">
+                        <span class="checkmarksettimana">Mar</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('mer')">
+                        <span class="checkmarksettimana">Mer</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('gio')">
+                        <span class="checkmarksettimana">Gio</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('ven')">
+                        <span class="checkmarksettimana">Ven</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('sab')">
+                        <span class="checkmarksettimana">Sab</span>
+                    </label>
+                    <label class="container-settimana">
+                        <input type="checkbox" id="Check1" onclick="server.showOrHide('dom')">
+                        <span class="checkmarksettimana">Dom</span>
+                    </label>
+                </div>
+                <div class="div-textbox">
+                    <label  class="label1" id="firstWeek">Prima settimana</label><br>
+                    <input type="week"  class="dropdown-week" required="yes"><br>
+                </div>
+                <div class="div-textbox">
+                    <label  class="label1" id="lastWeek">Ultima settimana</label><br>
+                    <input type="week"  class="dropdown-week" required="yes"><br>
+                </div>
+                <label  class="label2" id="timeStart">Orari</label><br>
+                <label  class="label1" id="almenoUnGiorno">Selezionare almeno un giorno </label>
+                <div class="div-time" id = "lun">
+                    <label  class="label3" id="timeStart">Lun:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "mar">
+                    <label  class="label3" id="timeStart">Mar:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "mer">
+                    <label  class="label3" id="timeStart">Mer:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "gio">
+                    <label  class="label3" id="timeStart">Gio:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "ven">
+                    <label  class="label3" id="timeStart">Ven:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "sab">
+                    <label  class="label3" id="timeStart">Sab:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+                <div class="div-time" id = "dom">
+                    <label  class="label3" id="timeStart">Dom:&nbsp&nbsp&nbspDa:</label>
+                    <input type="time"  class="dropdown-time">
+                    <label  class="label1" id="timeStart">A:</label>
+                    <input type="time"  class="dropdown-time">
+                </div>
+
+
+                <button type="submit" class="btnCrea" onclick="server.reset()">Crea corso</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

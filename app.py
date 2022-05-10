@@ -1,10 +1,38 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, request, render_template, redirect, url_for, session
+import jyserver.Flask as jsf
 
 
 app = Flask ( __name__ )
 app.secret_key = "JG{~^VQnAX8dK*4P'=/XTg^rBhH_psx+/zK9#>YkR_bWd7Av"
+
+#---------- JavaScript
+
+@jsf.use(app)
+class Calendario:
+	def __init__(self):
+		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
+		self.totalCount = 0
+	
+	# funzione per mostrare o meno gli orari del giorno di lezione in CreaCorso 
+	def showOrHide(self,giorno):
+		if(self.giorni[giorno] == 0):
+			self.js.document.getElementById(giorno).style.display = "flex"
+			self.giorni[giorno] = 1
+			self.totalCount +=1
+		else:
+			self.js.document.getElementById(giorno).style.display = "none"
+			self.giorni[giorno] = 0
+			self.totalCount -=1
+		if(self.totalCount == 0):
+			self.js.document.getElementById("almenoUnGiorno").style.display = "inline-block"
+		else:
+			self.js.document.getElementById("almenoUnGiorno").style.display = "none"
+
+	def reset(self):
+		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
+		self.totalCount = 0
 
 #---------- LOG FILES
 
@@ -62,6 +90,22 @@ def benvenuto ():
 def listaCorsi ():
 	if "user" in session:
 		return render_template("listaCorsi.html")
+	else:
+		return redirect(url_for("login"))
+
+#Carica la pagina con la lista dei corsi disponibili
+@app.route ('/creaCorso', methods=['GET'])
+def creaCorso ():
+	if "user" in session:
+		return Calendario.render(render_template("creaCorso.html"))
+	else:
+		return redirect(url_for("login"))
+
+#Carica la pagina con la lista dei corsi disponibili
+@app.route ('/gestisciCorsi', methods=['GET'])
+def gestisciCorsi ():
+	if "user" in session:
+		return render_template("gestisciCorsi.html")
 	else:
 		return redirect(url_for("login"))
 
