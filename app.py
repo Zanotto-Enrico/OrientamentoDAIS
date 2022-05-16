@@ -121,6 +121,28 @@ def logout():
 @app.route ('/calendario', methods=['GET'])
 def calendario ():
 	if "user" in session and session["isProfessor"] == False:
-		return Calendario.render(render_template("calendario.html"))
+		return render_template("calendario.html", isProfessor=session["isProfessor"])
+	else:
+		return redirect(url_for("login"))
+
+#Carica la pagina di benvenuto
+@app.route ('/infoCorso', methods=['POST'])
+def infoCorso ():
+	if "user" in session:
+		idCorso = request.form.get("idCorso")
+		if idCorso != None:												# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
+			diz = { "id":12,
+					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
+					"struttura": "Centro Studi sulle Arti della Russia",
+					"posti": "",
+					"modalita": "In Presenza",
+					"durata": "30 ore",
+					"iscrizioni": "aperte",
+					"posti": "80/110",
+					"prof": "Edsger Dijkstra",
+					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "}
+			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"])
+		else:
+			return render_template("listaCorsi.html", isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))

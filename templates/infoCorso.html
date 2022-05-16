@@ -1,0 +1,29 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>Info Corso</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1>Info Corso</h1> 
+        
+        
+    
+    <div class="div-info-corso">
+        <div class="colonna-info-corso">
+            <h4>Nome: </h4>{{info["nome"]}}<br>
+            <h4>Struttura: </h4> {{info["struttura"]}}<br>
+            <h4>Modalit&aacute; </h4>{{info["modalita"]}}<br>
+            <h4>Posti: </h4>{{info["posti"]}}<br>
+            <h4>Durata: </h4>{{info["durata"]}}<br>
+            <h4>Iscrizioni: </h4>{{info["iscrizioni"]}}<br>
+        </div>
+        <div class="colonna-info-corso">
+            <h4>Insegnante: </h4>{{info["prof"]}}<br>
+            <h4>Descrizione: </h4>{{info["descrizione"]}}<br>
+            <button type="submit" class="btn-iscriviti" onclick="">Iscriviti</button>
+        </div>
+    </div>
+    
+{% endblock %}

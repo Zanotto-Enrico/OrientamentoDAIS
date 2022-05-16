@@ -38,6 +38,7 @@ h3{
 }
 h4{
     font-size: 20px;
+    margin: 0px;
     font-family: "OpenSans-Regular";
 }
 header{
@@ -144,6 +145,14 @@ body{
     font-family: OpenSans-Regular;
     font-size: 16px;
     padding-top: 35%;
+}
+.btnInfoCorso:hover {
+    background-color:#7a0025;
+}
+
+.btnInfoCorso:active {
+
+    background-color:#ac0033;
 }
 
 .elencoCorsi{
@@ -429,4 +438,88 @@ td {
 }
 .container-settimana input:checked ~ .checkmarksettimana:after {
     display: block;
+}
+
+
+.calendar-day{
+    width: 200px;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #ffffff;
+    font-family: OpenSans-Regular;
+}
+
+.div-giorno-selezionato{
+    text-align: center;
+}
+
+.divListaLezioni{
+
+    margin-top: 30px;
+}
+
+
+.btnSetDate{
+    height: 50px;
+    width: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    background-color: #ac0033;
+    border: none;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+    margin-left: 15px;
+    
+}
+
+.btnSetDate:hover {
+    background-color:#7a0025;
+    transition: 0.1s;
+}
+
+.btnSetDate:active {
+
+    background-color:#ac0033;
+}
+
+.div-info-corso{
+    padding: 20px;
+    font-size: 16px;
+    font-family: OpenSans-Regular;
+}
+
+.colonna-info-corso{
+    float: left;
+    width: 42%;
+    padding-left: 4%;
+    padding-right: 4%;
+}
+
+.btn-iscriviti{
+    height: 60px;
+    width: 150px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    background-color: #ac0033;
+    border: none;
+    color: #f8f9fa;
+    margin-top: 40px;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+    
+}
+
+.btn-iscriviti:hover {
+    background-color:#7a0025;
+}
+
+.btn-iscriviti:active {
+
+    background-color:#ac0033;
 }

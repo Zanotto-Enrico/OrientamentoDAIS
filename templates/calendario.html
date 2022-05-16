@@ -1,0 +1,62 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>Calendario</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1> Calendario lezioni</h1>
+    <div class="div-data-calendario">
+        <label  class="label1">Seleziona il giorno </label><br>
+        <input type="date"  class="calendar-day" required="yes">
+        <button type="submit" class="btnSetDate" onclick="" >Vai</button>
+    </div>
+    <div class="div-giorno-selezionato">
+        <h2> 11 Maggio 2021 </h2>
+    </div>
+
+    <div class="divListaLezioni">
+        <table class="elencoCorsi">
+            <colgroup>
+                <col style="width: 16%">
+                <col style="width: 17%">
+                <col style="width: 28%">
+                <col style="width: 12%">
+                <col style="width: 16%">
+                <col style="width: 11%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th> Orari </th>
+                    <th> Struttura </th>
+                    <th> Titolo del progetto </th>
+                    <th> Aula </th>
+                    <th> Professore </th>
+                    <th> Dettagli </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> <h4> Inizio: 11:00 <br> Fine: 12:00 </h4></td>
+                    <td> Centro Studi sulle Arti della Russia </td>
+                    <td> Organizzazione di eventi culturali 
+                         L'arte ai giovani! Incontriamo l'arte russa </td>
+                    <td> 2C </td>
+                    <td> Alberto Rossi </td>
+                    <td> <button class="btnInfoCorso">Info</button> </td>
+                </tr>
+                <tr>
+                    <td> <h4>Inizio: 15:20 <br> Fine: 17:00 </h4> </td>
+                    <td> Dipartimento di Scienze Ambientali </td>
+                    <td> Laboratorio di Intelligenza Artificaiale
+                         avanzata: Regressione lineare e adversarial machine
+                         learning </td>
+                    <td> Online </td>
+                    <td> Edsger Dijkstra </td>
+                    <td> <button class="btnInfoCorso">Info</button>  </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
