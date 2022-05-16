@@ -1,5 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
+from pickle import FALSE
 from flask import Flask, request, render_template, redirect, url_for, session
 import jyserver.Flask as jsf
 
@@ -54,6 +55,7 @@ def login ():
 		request.form.get("username")
 		if True:															# QUA VA VERIFICATA LA PASSWORD NEL DATABASE
 			session["user"] = request.form.get("username")
+			session["isProfessor"] = False									# QUA VA MESSO TRUE SE L'UTENTE È UN PROFESSORE
 			return redirect(url_for("benvenuto"))
 		else:
 			return render_template("login.html", fallito=True)
@@ -81,7 +83,7 @@ def register ():
 def benvenuto ():
 	if "user" in session:
 		user = session["user"]
-		return render_template("benvenuto.html", user=user)
+		return render_template("benvenuto.html", user=user, isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
 
@@ -89,14 +91,14 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET'])
 def listaCorsi ():
 	if "user" in session:
-		return render_template("listaCorsi.html")
+		return render_template("listaCorsi.html", isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
 
 #Carica la pagina con la lista dei corsi disponibili
 @app.route ('/creaCorso', methods=['GET'])
 def creaCorso ():
-	if "user" in session:
+	if "user" in session and session["isProfessor"] == True:
 		return Calendario.render(render_template("creaCorso.html"))
 	else:
 		return redirect(url_for("login"))
@@ -104,7 +106,7 @@ def creaCorso ():
 #Carica la pagina con la lista dei corsi disponibili
 @app.route ('/gestisciCorsi', methods=['GET'])
 def gestisciCorsi ():
-	if "user" in session:
+	if "user" in session and session["isProfessor"] == True:
 		return render_template("gestisciCorsi.html")
 	else:
 		return redirect(url_for("login"))
@@ -115,4 +117,10 @@ def logout():
 	session.pop("user", None)
 	return redirect(url_for("login"))
 
-
+#Carica la pagina con la pagina con il calendario
+@app.route ('/calendario', methods=['GET'])
+def calendario ():
+	if "user" in session and session["isProfessor"] == False:
+		return Calendario.render(render_template("calendario.html"))
+	else:
+		return redirect(url_for("login"))

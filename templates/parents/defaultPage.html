@@ -10,8 +10,17 @@
             <div class="header-container" >
                 <img src="{{url_for('static', filename='imgs/logo.png')}}" class="imgtitle" />
                 <div class="btn-container">
-                    {% block bottoni %}
-                    {% endblock %}
+                    {% if isProfessor==False %}
+                        <button type="button"  class="menubtn" onclick="location.href = 'listaCorsi';">Lista corsi </button>
+                        <button type="button"  class="menubtn" >I tuoi corsi</button>
+                        <button type="button"  class="menubtn" onclick="location.href = 'calendario';">Calendario</button>
+                        <button type="button"  class="menubtn" >Profilo</button>
+                    {% else %}
+                        <button type="button"  class="menubtn" onclick="location.href = 'listaCorsi';" >Lista corsi</button>
+                        <button type="button"  class="menubtn" onclick="location.href = 'gestisciCorsi';">Gestisci corsi</button>
+                        <button type="button"  class="menubtn" onclick="location.href = 'creaCorso';">Crea Corso</button>
+                        <button type="button"  class="menubtn" onclick="location.href = 'profiloProf';">Profilo</button>
+                    {% endif %}
                 </div>
 
             </div>
