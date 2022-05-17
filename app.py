@@ -55,7 +55,7 @@ def login ():
 		request.form.get("username")
 		if True:															# QUA VA VERIFICATA LA PASSWORD NEL DATABASE
 			session["user"] = request.form.get("username")
-			session["isProfessor"] = False									# QUA VA MESSO TRUE SE L'UTENTE È UN PROFESSORE
+			session["isProfessor"] = True									# QUA VA MESSO TRUE SE L'UTENTE È UN PROFESSORE
 			return redirect(url_for("benvenuto"))
 		else:
 			return render_template("login.html", fallito=True)
@@ -120,7 +120,7 @@ def logout():
 #Carica la pagina con la pagina con il calendario
 @app.route ('/calendario', methods=['GET'])
 def calendario ():
-	if "user" in session and session["isProfessor"] == False:
+	if "user" in session:
 		return render_template("calendario.html", isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -129,19 +129,41 @@ def calendario ():
 @app.route ('/infoCorso', methods=['POST'])
 def infoCorso ():
 	if "user" in session:
-		idCorso = request.form.get("idCorso")
-		if idCorso != None:												# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
+		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
+		iscritto = False														# DA METTERE TRUE SE È GIÀ ISCRITTO
+		iscrivimi = request.form.get("iscrivimi")
+		annulla = request.form.get("annulla")
+		result=""
+
+		if iscrivimi == "1":
+			if iscritto == True:												# QUA VA LA VERIFICA DI ISCRIZIONE
+				result=""
+			elif True:															# QUA CODICE PER EFFETTUARE LA REGISTRAZIONE
+				result="effettuata"
+			elif True:															# QUA NEL CASO FALLISSE
+				result="fallita"
+		if annulla == "1":
+			if iscritto == False:												# QUA VA LA VERIFICA DI DISISCRIZIONE
+				result=""
+			elif True:															# QUA CODICE PER EFFETTUARE L'ANNULLAMENTO
+				result="annullata"
+			elif True:															# QUA NEL CASO FALLISSE
+				result="annullamento-fallito"
+
+		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
 			diz = { "id":12,
 					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
 					"struttura": "Centro Studi sulle Arti della Russia",
 					"posti": "",
 					"modalita": "In Presenza",
-					"durata": "30 ore",
+					"durata": "7 lezioni",
 					"iscrizioni": "aperte",
 					"posti": "80/110",
 					"prof": "Edsger Dijkstra",
-					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "}
-			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"])
+					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
+					"inizio": "15/05/2022"}
+			
+			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto)
 		else:
 			return render_template("listaCorsi.html", isProfessor=session["isProfessor"])
 	else:

@@ -129,6 +129,7 @@ body{
 
     margin-top: 60px;
 }
+
 .btnInfoCorso{
     height: 70px;
     width: 100%;
@@ -488,16 +489,27 @@ td {
 }
 
 .div-info-corso{
-    padding: 20px;
+    padding-left: 10px;
     font-size: 16px;
     font-family: OpenSans-Regular;
 }
 
+
+.div-info-corso h4{
+    margin-top: 20px;
+    margin-left: -10px;
+    margin-bottom: 5px;
+}
+
+.div-info-corso .divider{
+    width: 2px;
+    margin: 5%;
+}
+
 .colonna-info-corso{
     float: left;
-    width: 42%;
-    padding-left: 4%;
-    padding-right: 4%;
+    width: 44%;
+    padding-top: 60px;
 }
 
 .btn-iscriviti{
@@ -512,7 +524,7 @@ td {
     margin-top: 40px;
     font-family: OpenSans-Regular;
     font-size: 18px;
-    
+    margin-left: -10px;
 }
 
 .btn-iscriviti:hover {
@@ -520,6 +532,26 @@ td {
 }
 
 .btn-iscriviti:active {
+
+    background-color:#ac0033;
+}
+
+
+.btnLezione{
+    height: 70px;
+    width: 100%;
+    background-color: #ac0033;
+    border: none;
+    border-radius: 4px;
+    background-color: #ac0033;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+}
+.btnLezione:hover {
+    background-color:#7a0025;
+}
+.btnLezione:active {
 
     background-color:#ac0033;
 }

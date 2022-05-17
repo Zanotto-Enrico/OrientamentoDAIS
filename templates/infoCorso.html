@@ -19,10 +19,40 @@
             <h4>Durata: </h4>{{info["durata"]}}<br>
             <h4>Iscrizioni: </h4>{{info["iscrizioni"]}}<br>
         </div>
+        <div class="divider"></div>
         <div class="colonna-info-corso">
             <h4>Insegnante: </h4>{{info["prof"]}}<br>
+            <h4>Inizio lezioni: </h4>{{info["inizio"]}}<br>
             <h4>Descrizione: </h4>{{info["descrizione"]}}<br>
-            <button type="submit" class="btn-iscriviti" onclick="">Iscriviti</button>
+
+            {%if iscritto==False%}
+                <form method='POST' action='infoCorso'> 
+                    <button type="submit" class="btn-iscriviti" name="iscrivimi" value=1>Iscriviti</button>
+                </form>
+            {%endif%} 
+            {%if iscritto==True%}
+                <form method='POST' action='infoCorso'> 
+                    <button type="submit" class="btn-iscriviti" name="annulla" value=1>Annulla iscrizione</button>
+                </form>
+            {%endif%} 
+
+            
+
+            {%if result=="effettuata"%}
+                <h4>Successo! </h4>Iscrizione completata correttamente<br>
+            {%endif%} 
+            {%if result=="fallita"%}
+                <h4>Errore! </h4>Iscrizione non riuscita<br>
+            {%endif%}
+
+            {%if result=="annullata"%}
+                <h4>Successo! </h4>Iscrizione annullata correttamente<br>
+            {%endif%} 
+            {%if result=="annullamento-fallito"%}
+                <h4>Errore! </h4>Annullamento non riuscito<br>
+            {%endif%}
+            
+        
         </div>
     </div>
     
