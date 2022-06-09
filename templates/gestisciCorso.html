@@ -1,0 +1,45 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>gestione corso</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1>Gestione Corso</h1> 
+        
+        
+    
+    <div class="div-info-corso">
+        <div class="colonna-info-corso">
+            <h4>Nome: </h4>{{info["nome"]}}<br>
+            <h4>Struttura: </h4> {{info["struttura"]}}<br>
+            <h4>Modalit&aacute; </h4>{{info["modalita"]}}<br>
+            <h4>Posti: </h4>{{info["iscritti"]}}/{{info["postimax"]}}<br>
+            <h4>Durata: </h4>{{info["durata"]}}<br>
+            <h4>Iscrizioni: </h4>{{info["iscrizioni"]}}<br>
+        </div>
+        <div class="divider"></div>
+        <div class="colonna-info-corso">
+            <h4>Insegnante: </h4>{{info["prof"]}}<br>
+            <h4>Inizio lezioni: </h4>{{info["inizio"]}}<br>
+            <h4>Descrizione: </h4>{{info["descrizione"]}}<br>
+
+            <div class="divGestione" >
+                <form method='POST' action='modCorso'> 
+                    <button type="submit" class="btnsGestione">Modifica</button>
+                </form>
+                <form method='POST' action='listaIscritti'> 
+                    <button type="submit" class="btnsGestione">Lista Iscrizioni</button>
+                </form>
+            </div>
+            <div class="divGestione" >
+                <form method='POST' action='eliminaCorso'> 
+                    <button type="submit" class="btnsGestione">Elimina</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>Profilo</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1>Profilo personale</h1> 
+    <div class="div-info-corso">
+        <div class="colonna-info-corso">
+            <h4>Username: </h4>{{info["username"]}}<br>
+            <h4>Nome: </h4> {{info["nome"]}}<br>
+            <h4>Cognome: </h4>{{info["cognome"]}}<br>
+            <h4>Email: </h4>{{info["email"]}}<br>
+        </div>
+        <div class="divider_profilo"></div>
+        <div class="colonna-info-corso">
+            <h4>Corsi attivi: </h4>{{info["corsi"]}}<br>
+            <h4>Tipo Account: </h4>{{info["account"]}}<br>
+            <h4>Nascita: </h4>{{info["nascita"]}}<br>
+
+            <form method='GET' action='logout'> 
+                <button type="submit" class="btn-iscriviti">Logout</button>
+            </form>
+
+            
+        
+        </div>
+{% endblock %}

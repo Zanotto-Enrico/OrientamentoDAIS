@@ -6,7 +6,60 @@
 
 
 {% block contenuto %}
-    <h1> Gestione Corsi</h1>
-    
-    
+<h1> I tuoi corsi</h1>
+<div class="divListaCorsi">
+    <table class="elencoCorsi">
+        <colgroup>
+            <col style="width: 13%">
+            <col style="width: 20%">
+            <col style="width: 25%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 11%">
+            <col style="width: 11%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th> Modalit&aacute; </th>
+                <th> Struttura </th>
+                <th> Titolo del progetto </th>
+                <th> Durata </th>
+                <th> Iscrizioni </th>
+                <th> Posti </th>
+                <th> Dettagli </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> In Presenza </td>
+                <td> Centro Studi sulle Arti della Russia </td>
+                <td> Organizzazione di eventi culturali 
+                     L'arte ai giovani! Incontriamo l'arte russa </td>
+                <td> 12 lezioni </td>
+                <td> aperte </td>
+                <td> 80/110 </td>
+                <td>
+                    <form method='POST' action='gestisciCorso'> 
+                    <button class="btnModCorso" name="idCorso" value=0>Gestisci</button> 
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td> Online </td>
+                <td> Dipartimento di Scienze Ambientali </td>
+                <td> Laboratorio di Intelligenza Artificaiale
+                     avanzata: Regressione lineare e adversarial machine
+                     learning </td>
+                <td> 5 lezioni </td>
+                <td> chiuse </td>
+                <td> 30/30 </td>
+                <td>                        
+                    <form method='POST' action='gestisciCorso'> 
+                        <button class="btnModCorso" name="idCorso" value=0>Gestisci</button> 
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 {% endblock %}

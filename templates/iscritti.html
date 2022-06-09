@@ -1,0 +1,41 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>Lista corsi</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1> Iscritti al corso</h1>
+    <div class="divListaCorsi">
+
+
+        <table class="elencoCorsi">
+            <colgroup>
+                <col style="width: 20%">
+                <col style="width: 20%">
+                <col style="width: 20%">
+                <col style="width: 25%">
+                <col style="width: 15%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th> Username </th>
+                    <th> Cognome </th>
+                    <th> Nome </th>
+                    <th> E-mail </th>
+                    <th> Lezioni seguite </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for iscritto in lista %}
+                <tr>
+                    {% for dato in iscritto %}
+                        <td> {{ dato }} </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

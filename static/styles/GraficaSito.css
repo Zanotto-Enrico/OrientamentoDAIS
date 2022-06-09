@@ -555,3 +555,58 @@ td {
 
     background-color:#ac0033;
 }
+
+.btnModCorso{
+    height: 70px;
+    width: 100%;
+    background-color: #ac0033;
+    border: none;
+    border-radius: 4px;
+    background-color: #ac0033;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 17px;
+}
+.btnModCorso:hover {
+    background-color:#7a0025;
+}
+
+.btnModCorso:active {
+
+    background-color:#ac0033;
+}
+
+.divGestione{
+    display:flex;
+    flex-direction: row;
+}
+
+.btnsGestione{
+    height: 60px;
+    width: 150px;
+    border-radius: 5px;
+    background-color: #ac0033;
+    border: none;
+    color: #f8f9fa;
+    margin-top: 40px;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+    margin-left: 10px;
+}
+.btnsGestione:hover {
+    background-color:#7a0025;
+}
+
+.btnsGestione:active {
+
+    background-color:#ac0033;
+}
+
+.divider_profilo {
+    float: left;
+    background-color: #ac0033;
+    width: 2px;
+    height: 400px;
+    margin-right: 6%;
+    margin-top: 35px;
+}

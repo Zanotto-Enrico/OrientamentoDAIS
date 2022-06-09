@@ -1,0 +1,42 @@
+{% extends "parents/defaultPage.html" %}
+
+{% block titolo %}
+    <title>Creazione corso</title>
+{% endblock %}
+
+
+{% block contenuto %}
+    <h1> Modifica Corso </h1>
+    <div class="div-form-creazione">
+        <form method='POST' >
+            <div class="column">
+            
+                <div class="div-textbox">
+                    <label  class="label1">Nome del corso</label><br>
+                    <input type="text" class="input-label-1" id="name" required="yes" disabled="yes" value="{{info["nome"]}}">
+                </div>
+                <div class="div-textbox">
+                    <label  class="label1">Struttura o edificio</label><br>
+                    <input type="text" class="input-label-1" id="place" required="yes" value="{{info["struttura"]}}">
+                </div>
+                <div class="div-num">
+                    <label class="label1">Numero di partecipanti</label><br>
+                    <label class="label1">Minimo</label>
+                    <input type="number" class="input-number-1" id="num-min" min="1" max="{{info["postimin"]}}" value="{{info["postimin"]}}">
+                    <label class="label1">Massimo</label>
+                    <input type="number" class="input-number-1" id="num-max" min="{{info["iscritti"]}}" max="999" value="{{info["postimax"]}}">
+                </div>
+
+                <div class="div-textbox">
+                    <label  class="label1">Breve descrizione   (max 300 lettere)</label><br>
+                    <textarea class="input-label-2" rows="5" id = "description" maxlength="300" required="yes" > {{info["descrizione"]}}</textarea><br>
+                </div>
+
+
+                <input type="submit" class="btnCrea" value="Applica Modifiche">
+                
+
+            </div>
+        </form>
+    </div>
+{% endblock %}
