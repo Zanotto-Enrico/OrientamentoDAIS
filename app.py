@@ -133,22 +133,22 @@ def calendario ():
 def infoCorso ():
 	if "user" in session:
 		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
-		iscritto = False														# DA METTERE TRUE SE È GIÀ ISCRITTO
-		iscrivimi = request.form.get("iscrivimi")
+		iscritto = False														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
+		iscrivimi = request.form.get("iscrivimi")											# E FALSE ALTRIMENTI (TRAMITE FUNZIONE APPOSITA IN DATBASE.PY)
 		annulla = request.form.get("annulla")
 		result=""
 
 		if iscrivimi == "1":
-			if iscritto == True:												# QUA VA LA VERIFICA DI ISCRIZIONE
+			if iscritto == True:												# VA VERIFICATO CHE NON SIA GIà ISCRITTO
 				result=""
-			elif True:															# QUA CODICE PER EFFETTUARE LA REGISTRAZIONE
+			elif True:															# ISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
 				result="effettuata"
 			elif True:															# QUA NEL CASO FALLISSE
 				result="fallita"
 		if annulla == "1":
-			if iscritto == False:												# QUA VA LA VERIFICA DI DISISCRIZIONE
+			if iscritto == False:												# QUA VA LA FUNZIONE DI DISISCRIZIONE
 				result=""
-			elif True:															# QUA CODICE PER EFFETTUARE L'ANNULLAMENTO
+			elif True:															# DISISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
 				result="annullata"
 			elif True:															# QUA NEL CASO FALLISSE
 				result="annullamento-fallito"
@@ -207,8 +207,8 @@ def gestisciCorso ():
 def eliminaCorso ():
 	if "user" in session and session["idCorso"] != None:
 			
-		if True:											# NELL'I VA VERIFICATO SE L'UTENTE È IL PROF PROPRIETARIO DEL CORSO
-			tmp = 0 # CHIAMARE LA FUNZIONE PER CANCELLARE IL CORSO
+		if True:											# NELL'IF VA VERIFICATO SE L'UTENTE È IL PROF PROPRIETARIO DEL CORSO
+			tmp = 0 # QUA AL POSTO DI QUESTO ASSEGNAMENTO VA CHIAMATA LA FUNZIONE PER CANCELLARE IL CORSO
 
 		return redirect(url_for("gestisciCorsi"))
 
@@ -245,7 +245,7 @@ def modificaCorso ():
 @app.route ('/listaIscritti', methods=['GET','POST'])
 def listaIscritti ():
 	if "user" in session:
-		if session["idCorso"] != None:
+		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEGLI ISCRITTI AL CORSO
 			lista =[    ["Cre_98","Crescenzo","Giustino","giustino@gmail.com","10"], 
 						["antonina_sev","Antonina", "Severina","antonina@hotmail.com","0"], 
 						["greg_nal","Naldo", "Gregorio","greg@gmail.com","5"], 
@@ -261,7 +261,7 @@ def listaIscritti ():
 def profilo ():
 	if "user" in session:
 	
-		diz = { "id":12,
+		diz = { "id":12,												# DIZIONARIO DA RIEMPIRE CON LE INFO PRIVATE DELL'UTENTE
 				"username": "OttoZan",
 				"nome": "Carlo",
 				"cognome": "Rossi",
