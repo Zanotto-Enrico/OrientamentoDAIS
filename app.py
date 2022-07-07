@@ -139,14 +139,14 @@ def infoCorso ():
 		result=""
 
 		if iscrivimi == "1":
-			if iscritto == True:												# VA VERIFICATO CHE NON SIA GIà ISCRITTO
+			if iscritto == True:												# VERIFICO CHE L'UTENTE NON SIA GIà ISCRITTO
 				result=""
 			elif True:															# ISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
 				result="effettuata"
 			elif True:															# QUA NEL CASO FALLISSE
 				result="fallita"
 		if annulla == "1":
-			if iscritto == False:												# QUA VA LA FUNZIONE DI DISISCRIZIONE
+			if iscritto == False:												# VERIFICO CHE L'UTENTE NON SIA GIà NON ISCRITTO
 				result=""
 			elif True:															# DISISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
 				result="annullata"
