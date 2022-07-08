@@ -92,7 +92,26 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET'])
 def listaCorsi ():
 	if "user" in session:
-		return render_template("listaCorsi.html", isProfessor=session["isProfessor"])
+		listaDiDiz = [																					# LISTA DI DIZIONARI CHE RAPPRESENTANO TUTTI I CORSI
+			{ "id":1,																					# VA SOSTITUITA CON CHIAMATA A FUNZIONE APPOSITA
+			"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
+			"struttura": "Centro Studi sulle Arti della Russia",
+			"modalita": "In Presenza",
+			"durata": "7 lezioni",
+			"iscrizioni": "aperte",
+			"postimax": "110",
+			"iscritti": "80"
+			},
+			{ "id":2,
+			"nome": "Laboratorio di Intelligenza Artificaiale avanzata",
+			"struttura": "Dipartimento di Scienze Ambientali",
+			"modalita": "Online",
+			"durata": "5 lezioni",
+			"iscrizioni": "chiuse",
+			"postimax": "30",
+			"iscritti": "30"
+			}]
+		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
 
@@ -157,7 +176,6 @@ def infoCorso ():
 			diz = { "id":12,
 					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
 					"struttura": "Centro Studi sulle Arti della Russia",
-					"posti": "",
 					"modalita": "In Presenza",
 					"durata": "7 lezioni",
 					"iscrizioni": "aperte",
@@ -184,7 +202,6 @@ def gestisciCorso ():
 			diz = { "id":12,
 					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
 					"struttura": "Centro Studi sulle Arti della Russia",
-					"posti": "",
 					"modalita": "In Presenza",
 					"durata": "7 lezioni",
 					"iscrizioni": "aperte",
@@ -224,7 +241,6 @@ def modificaCorso ():
 			diz = { "id":12,
 					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
 					"struttura": "Centro Studi sulle Arti della Russia",
-					"posti": "",
 					"modalita": "In Presenza",
 					"durata": "7 lezioni",
 					"iscrizioni": "aperte",
