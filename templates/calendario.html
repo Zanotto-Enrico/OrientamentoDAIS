@@ -33,29 +33,20 @@
                     <th> Titolo del progetto </th>
                     <th> Aula </th>
                     <th> Professore </th>
-                    <th> Dettagli </th>
+                    <th> Conferma </th>
                 </tr>
             </thead>
             <tbody>
+                {% for lezione in info %}
                 <tr>
-                    <td> <h4> Inizio: 11:00 <br> Fine: 12:00 </h4></td>
-                    <td> Centro Studi sulle Arti della Russia </td>
-                    <td> Organizzazione di eventi culturali 
-                         L'arte ai giovani! Incontriamo l'arte russa </td>
-                    <td> 2C </td>
-                    <td> Alberto Rossi </td>
-                    <td> <button class="btnLezione">Conferma</button> </td>
-                </tr>
-                <tr>
-                    <td> <h4>Inizio: 15:20 <br> Fine: 17:00 </h4> </td>
-                    <td> Dipartimento di Scienze Ambientali </td>
-                    <td> Laboratorio di Intelligenza Artificaiale
-                         avanzata: Regressione lineare e adversarial machine
-                         learning </td>
-                    <td> Online </td>
-                    <td> Edsger Dijkstra </td>
+                    <td> <h4> Inizio: {{ lezione.inizio }}<br> Fine: {{ lezione.fine }}</h4></td>
+                    <td> {{ lezione.struttura }} </td>
+                    <td> {{ lezione.nome }} </td>
+                    <td> {{ lezione.aula }} </td>
+                    <td> {{ lezione.prof }} </td>
                     <td> <button class="btnLezione">Conferma</button>  </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
