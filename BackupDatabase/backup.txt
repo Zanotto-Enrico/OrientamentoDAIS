@@ -1,0 +1,115 @@
+/* prima creare un database di nome "orientamento" e posizionarsi al suo interno */
+
+
+
+/* ----------------------   CREAZIONE TABELLE   ---------------------- */
+
+
+create table Utenti (
+username VARCHAR(50) PRIMARY KEY,
+nome VARCHAR(50) NOT NULL,
+cognome VARCHAR(50) NOT NULL,
+email VARCHAR(50) NOT NULL,
+nascita DATE NOT NULL
+);
+
+create table Docenti (
+username VARCHAR(50) PRIMARY KEY,
+FOREIGN KEY (username) REFERENCES Utenti(username)
+);
+
+create table Partecipanti (
+username VARCHAR(50) PRIMARY KEY,
+scuola_provenienza VARCHAR(100) NOT NULL,
+FOREIGN KEY (username) REFERENCES Utenti(username)
+);
+
+create table Edifici (
+id_edificio SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+indirizzo VARCHAR(100) NOT NULL);
+
+create table Aule (
+id_aula SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+id_edificio INTEGER NOT NULL,
+FOREIGN KEY (id_edificio) REFERENCES Edifici(id_edificio)
+);
+
+create table Corsi (
+id_corso SERIAL PRIMARY KEY,
+nome VARCHAR(50) NOT NULL,
+descrizione VARCHAR(350) NOT NULL,
+is_online BOOLEAN NOT NULL,
+min_partecipanti INTEGER NOT NULL,
+max_partecipanti INTEGER NOT NULL,
+docente VARCHAR(50) NOT NULL,
+id_aula INTEGER NOT NULL,
+FOREIGN KEY (docente) REFERENCES Docenti(username),
+FOREIGN KEY (id_aula) REFERENCES Aule(id_aula)
+);
+
+create table Lezioni(
+id_lezione SERIAL PRIMARY KEY,
+secret_code VARCHAR(32) NOT NULL,
+orario_inizio TIME NOT NULL,
+orario_fine TIME NOT NULL,
+id_corso INTEGER NOT NULL,
+FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso)
+);
+
+create table IscrizioniCorsi(
+id_corso SERIAL NOT NULL,
+username VARCHAR(50) NOT NULL,
+PRIMARY KEY (id_corso,username),
+FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso),
+FOREIGN KEY (username) REFERENCES Partecipanti(username)
+);
+
+
+create table PartecipazioniLezione(
+id_lezione SERIAL NOT NULL,
+username VARCHAR(50) NOT NULL,
+PRIMARY KEY (id_lezione,username),
+FOREIGN KEY (id_lezione) REFERENCES Lezioni(id_lezione),
+FOREIGN KEY (username) REFERENCES Partecipanti(username)
+);
+
+
+
+/* ----------------------   PERMESSI E RUOLI ---------------------- */
+
+
+
+revoke all on schema public from public;
+
+
+CREATE ROLE ruoloutente;
+GRANT CONNECT ON DATABASE orientamento TO ruoloutente;
+GRANT USAGE ON SCHEMA public TO ruoloutente;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ruoloutente;
+GRANT DELETE,UPDATE,INSERT ON IscrizioniCorsi,PartecipazioniLezione TO ruoloutente;
+
+
+CREATE ROLE ruoloprof;
+GRANT CONNECT ON DATABASE orientamento TO ruoloprof;
+GRANT USAGE ON SCHEMA public TO ruoloprof;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ruoloprof;
+GRANT DELETE,UPDATE,INSERT ON Corsi,Lezioni TO ruoloutente;
+
+CREATE ROLE ruoloadmin;
+GRANT ALL ON DATABASE orientamento TO ruoloadmin;
+GRANT USAGE ON SCHEMA public TO ruoloadmin;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO ruoloadmin;\
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO ruoloadmin;
+
+
+CREATE USER utente WITH PASSWORD 'CLgC92dK9DbEkrMSRS4j';
+GRANT ruoloutente TO utente ;
+
+CREATE USER prof WITH PASSWORD '7TpSZbBYJTcGUxxyqtSD';
+GRANT ruoloprof TO prof ;
+
+CREATE USER admin WITH PASSWORD 'yQ9q8XgWYzYQv3RWccc3';
+GRANT ruoloadmin TO admin ;
+
