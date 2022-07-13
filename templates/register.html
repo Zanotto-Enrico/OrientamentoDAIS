@@ -5,7 +5,9 @@
     </head>
     <body>
         <div class="centralbodyregister">
-			<img src="{{url_for('static', filename='imgs/logored.png')}}" class="imgtitle" />
+            <div class="divimg">
+                <img src="{{url_for('static', filename='imgs/logored.png')}}" class="imgtitle" />
+            </div>
             <div class="registerpanel">
 
                 <div class= "divtitle">
@@ -13,16 +15,46 @@
                 </div>
 
                 <form method="post" action="/register">
-                    <div class="divtextbox">
-                        <input type = "text" name = "username" placeholder="username" required class="textbox" >
+                    <div class="rowreg">
+                        <div class="columnreg">
+                            <div class="divtextbox">
+                                <input type = "text" name = "username" placeholder="username" required class="textbox" >
+                            </div>
+                            <div class="divtextbox">
+                                <input type = "text" name = "email" placeholder="email" required class="textbox" >
+                            </div>
+                            <div class="divtextboxpw">
+                                <input type = "password" name = "password" placeholder="password" required class="textbox">
+                            </div>
+                            <div class="divtextbox">
+                                <input type = "password" name = "conferma" placeholder="conferma password" required class="textbox">
+                            </div>
+
                         </div>
-                    <div class="divtextbox">
-                        <input type = "password" name = "password" placeholder="password" required class="textbox">
-                    </div>
-                    <div class="divtextbox">
-                        <input type = "password" name = "conferma" placeholder="conferma password" required class="textbox">
-                    </div>
-                    <div class="divsubmit">
+                        <div class="spacer">
+                        </div>
+                        <div class="columnreg">
+                            <div class="divtextbox">
+                                <input type = "text" name = "nome" placeholder="nome" required class="halftextbox" >
+                                <input type = "text" name = "cognome" placeholder="cognome" required class="halftextbox" style="margin-left: 15px;" >
+                            </div>
+                            <div class="divtextbox">
+                                <h3>Nascita:</h3>
+                                <input type = "date" name = "nascita" placeholder="nascita" required class="halftextbox">
+                            </div>
+                            <div class="divcheck">
+                                <label class="container"> Sei un docente?
+                                    <input type="checkbox" checked="checked" name = "professore">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="divtextbox">
+                                <input type = "text" name = "scuola" placeholder="scuola di provenienza" required class="textbox">
+                            </div>
+                        </div>
+
+                      </div>
+                      <div class="divsubmit">
                         <input class="okbtn" type="submit" name = "submit" id = "sub" value="Registrati">
                     </div>
                 </form>
