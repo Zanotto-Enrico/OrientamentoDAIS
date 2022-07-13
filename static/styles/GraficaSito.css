@@ -203,9 +203,10 @@ td {
 .label3{
     font-family: OpenSans-Bold;
     font-size: 18px;
-    margin-top: 10px;
+    margin-top: 5px;
     display: inline-block;
-    width: 110px;
+    width: 70px;
+    margin-left: 20px;
     text-align: center;
 }
 
@@ -259,6 +260,17 @@ td {
     width: 200px;
     font-size: 16px;
     padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #333333;
+    background-color: #ffffff;
+    font-family: OpenSans-Regular;
+}
+
+.input-dropdown-2{
+    width: 200px;
+    font-size: 16px;
+    padding: 7px;
     border-radius: 5px;
     border-width: 1px;
     border-color: #333333;
@@ -581,6 +593,21 @@ td {
     flex-direction: row;
 }
 
+.btnIscrizioni{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 50px;
+    padding-left: 62px;
+}
+.btnModifiche{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 50px;
+    padding-left: 10px;
+}
+
 .btnsGestione{
     height: 60px;
     width: 150px;
@@ -591,7 +618,7 @@ td {
     margin-top: 40px;
     font-family: OpenSans-Regular;
     font-size: 18px;
-    margin-left: 10px;
+    margin-left: 50px;
 }
 .btnsGestione:hover {
     background-color:#7a0025;

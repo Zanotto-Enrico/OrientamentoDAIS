@@ -21,10 +21,12 @@ class Calendario:
 	def showOrHide(self,giorno):
 		if(self.giorni[giorno] == 0):
 			self.js.document.getElementById(giorno).style.display = "flex"
+			self.js.document.getElementById("orario"+giorno).setAttribute('required', '')
 			self.giorni[giorno] = 1
 			self.totalCount +=1
 		else:
 			self.js.document.getElementById(giorno).style.display = "none"
+			self.js.document.getElementById("orario"+giorno).removeAttribute('required');
 			self.giorni[giorno] = 0
 			self.totalCount -=1
 		if(self.totalCount == 0):
