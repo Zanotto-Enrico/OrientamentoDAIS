@@ -91,7 +91,7 @@ def benvenuto ():
 		return redirect(url_for("login"))
 
 #Carica la pagina con la lista dei corsi disponibili
-@app.route ('/listaCorsi', methods=['GET'])
+@app.route ('/listaCorsi', methods=['GET','POST'])
 def listaCorsi ():
 	if "user" in session:
 		listaDiDiz = [																					# LISTA DI DIZIONARI CHE RAPPRESENTANO TUTTI I CORSI

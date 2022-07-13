@@ -7,15 +7,14 @@
 
 {% block contenuto %}
     <h1> Lista Corsi</h1>
-    <div class="divfiltro">
-        <select name="FiltraCategoria" class="filtro" >
-            <option value="Filtra per categoria">Filtra per categoria</option>
-            <option value="Arti e discipline umanistiche">Arti e discipline umanistiche</option>
-            <option value="Comunicazione e eventi">Comunicazione e eventi</option>
-            <option value="Internazionalizzazione">Internazionalizzazione</option>
-            <option value="Lingue e culture">Lingue e culture</option>
-            <option value="Scienze e tecnologia">Scienze e tecnologia</option>
-          </select>
+    <div class="div-data-calendario">
+        <label  class="label1">Ricerca </label><br>
+        <div style>
+            <form method='POST' action='listaCorsi'>
+                <input type="text"  class="calendar-day" required="yes">
+                <button type="submit" class="btnResearch" onclick="" >&nbsp;</button>
+            </form>
+        </div>
     </div>
     <div class="divListaCorsi">
         <table class="elencoCorsi">

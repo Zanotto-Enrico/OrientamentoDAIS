@@ -490,6 +490,25 @@ td {
     
 }
 
+.btnResearch{
+    width: 70px;
+    height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    border: none;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 18px;
+    margin-left: 15px;
+    background: url(/static/imgs/search.png);
+    background-size: 38%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #ac0033;
+}
+
+
 .btnSetDate:hover {
     background-color:#7a0025;
     transition: 0.1s;
