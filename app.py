@@ -1,7 +1,9 @@
 from distutils.log import info
+from locale import delocalize
 import logging
 from logging.handlers import RotatingFileHandler
 from pickle import FALSE, TRUE
+from xml.dom.minidom import Document
 from flask import Flask, request, render_template, redirect, url_for, session
 import jyserver.Flask as jsf
 
@@ -16,6 +18,9 @@ class Calendario:
 	def __init__(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
+	
+	def setEdifici(self,diz):
+		self.diz = diz
 	
 	# funzione per mostrare o meno gli orari del giorno di lezione in CreaCorso 
 	def showOrHide(self,giorno):
@@ -34,9 +39,24 @@ class Calendario:
 		else:
 			self.js.document.getElementById("almenoUnGiorno").style.display = "none"
 
+	def updateAulaDrop(self):
+		edificio = self.js.document.getElementById("edificio").value
+		self.js.document.getElementById("aula").value = 0
+		self.js.document.getElementById("aula").removeAttribute('disabled')
+		i = 0
+		for aula in self.diz[str(edificio)]:
+			self.js.document.getElementById(i).style.display = "inline-block"
+			self.js.document.getElementById(i).innerHTML = aula
+			i+=1
+		for aula in range(i, 19):
+			self.js.document.getElementById(i).style.display = "none"
+
+
+
 	def reset(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
+
 
 #---------- LOG FILES
 
@@ -121,9 +141,16 @@ def listaCorsi ():
 @app.route ('/creaCorso', methods=['GET'])
 def creaCorso ():
 	if "user" in session and session["isProfessor"] == True:
+		diz = {
+			"Alfa": ["aula1", "aula2", "aula3"],
+			"Beta": ["aula4", "aula5", "aula6"],
+			"Delta": ["aula7", "aula8", "aula9"],
+			"Epsilon": ["aula10", "aula11", "aula12"],
+			"Zeta": ["aula13", "aula14", "aula15", "aula16"]}
 		pagina = Calendario
+		pagina.setEdifici(diz)
 		pagina.reset()
-		return pagina.render(render_template("creaCorso.html"))
+		return pagina.render(render_template("creaCorso.html", diz=diz))
 	else:
 		return redirect(url_for("login"))
 

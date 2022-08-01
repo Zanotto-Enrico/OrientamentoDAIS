@@ -366,6 +366,11 @@ td {
     width: 40%;
 }
 
+.column-drop {
+    float: left;
+    width: 50%;
+}
+
 .divider {
     float: left;
     background-color: #ac0033;

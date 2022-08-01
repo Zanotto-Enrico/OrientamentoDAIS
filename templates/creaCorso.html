@@ -8,16 +8,34 @@
 {% block contenuto %}
     <h1> Creazione corso</h1>
     <div class="div-form-creazione">
-        <form>
+        <form method="POST">
             <div class="column">
             
                 <div class="div-textbox">
                     <label  class="label1">Nome del corso</label><br>
                     <input type="text" class="input-label-1" id="name" required="yes">
                 </div>
-                <div class="div-textbox">
-                    <label  class="label1">Struttura o edificio</label><br>
-                    <input type="text" class="input-label-1" id="place" required="yes">
+                <div class="column-drop">
+                    <div class="div-textbox">
+                        <label  class="label1">Edificio</label><br>
+                        <select name="edificio" class="input-dropdown-1" id="edificio" onchange="server.updateAulaDrop()" required>
+                            <option value="" selected disabled hidden>Seleziona</option>
+                            {% for edificio in diz.keys() %}
+                                <option value="{{edificio}}">{{edificio}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="column-drop">
+                    <div class="div-textbox">
+                        <label  class="label1">Aula</label><br>
+                        <select name="aula" class="input-dropdown-1" id="aula" disabled required>
+                            <option value="" selected disabled hidden >Seleziona</option>
+                            {% for i in range(0, 20) %}
+                                <option id={{i}} value="{{i}}" style="display: none;" >{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="div-num">
                     <label class="label1">Numero di partecipanti</label><br>
