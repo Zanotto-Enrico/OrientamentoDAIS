@@ -10,6 +10,9 @@ from enum import Enum
 
 Base = declarative_base()
 
+# definito un tipo enumerativo per la gestione dei casi che possono verificarsi quando
+# viene eseguita una query: può avere successo, può fallire o l'elemento può già esistere 
+# (vedere ad esempio il caso degli utenti)
 class Return(Enum):
     SUCCESS = 1
     FAILURE = 2
