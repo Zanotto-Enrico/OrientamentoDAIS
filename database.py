@@ -219,6 +219,39 @@ def insert_new_user(username, nome, cognome, email, data_nascita, password, is_p
               "      Per maggiori info:\n" + e)
         return Return.FAILURE
     
-#---- Metodo che contiene una query che legge tutti i gli utenti della base di dati e li stampa 
+
+#---- Metodo che contiene una query che legge tutti i gli utenti della base di dati
+#     e ne restituisce una lista di oggetti Utenti
 def get_users():
     return list(session.query(Utenti).all())
+
+
+#---- Metodo che contiene una query che legge tutti i docenti della base di dati e ne
+#     restituisce una lista di oggetti Docenti
+def get_docenti():
+    return list(session.query(Docenti).all())
+
+
+#---- Metodo utile per verificare le credenziali fornite in fase di accesso e quindi per stabilire
+#     se l'utente può avere accesso all'area privata del sito
+def check_user_login(username, password):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
+    
+    for u in get_users():
+        if (u.username == username and u.password == password):
+            return Return.SUCCESS
+    
+    return Return.FAILURE
+
+
+#---- Metodo utile per verificare se un certo username, e quindi utente, del sito sia registrato
+#     come docente o meno restituendone il risultato della verifica
+def is_professor(username):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
+    
+    for u in get_docenti():
+        if u.username == username:
+            return True
+    return False

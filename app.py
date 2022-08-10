@@ -82,10 +82,17 @@ def test_db():
 @app.route ('/login', methods=['GET','POST'])
 def login ():
 	if request.method == 'POST':
-		request.form.get("username")
-		if True:															# QUA VA VERIFICATA LA PASSWORD NEL DATABASE
+
+		if check_user_login(username = str(request.form.get("username")), password = str(request.form.get("password"))) == Return.SUCCESS:
 			session["user"] = request.form.get("username")
-			session["isProfessor"] = True									# QUA VA MESSO TRUE SE L'UTENTE È UN PROFESSORE
+   
+			# verifico se l'utente è un professore e setto la relativa variabile di sessione 
+   			# di conseguenza
+			if is_professor(username = str(request.form.get("username"))) == True:
+				session["isProfessor"] = True
+			else:
+				session["isProfessor"] = False
+    
 			return redirect(url_for("benvenuto"))
 		else:
 			return render_template("login.html", fallito=True)
