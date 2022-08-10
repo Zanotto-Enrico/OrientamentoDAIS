@@ -22,7 +22,6 @@ class Return(Enum):
 # DEFINIZIONE DELLE CLASSI CHE VANNO A RAPPRESENTARE LE TABELLE DEL DB
 # Per ciascuna viene anche implementato il metodo di pretty-printing a scopo di sviluppo
 # +----
-
 class Edifici(Base):
     __tablename__ = "edifici"
     
@@ -80,6 +79,7 @@ class Utenti(Base):
     cognome = Column(String)
     email = Column(String)
     nascita = Column(Date)
+    password = Column(String)
     
     def __repr__(self):
         return "<Utente (username: %s, nome: %s, congome: %s)>" % (self.username, self.nome, self.cognome)
@@ -116,8 +116,12 @@ class Corsi(Base):
     
     def __repr__(self):
         return "<Corso (nome: %s, descrizione: %s, docente: %s)>" % (self.nome, self.descrizione, self.docente)
-    
-# |____
+
+   
+# + - - - - - - - - - - +
+# |        METODI       |
+# + - - - - - - - - - - +
+
 
 #---- Metodo utilizzato per inizializzare la sessione di connessione alla base di dati
 def initialize_db ( user, db, table ):
@@ -149,17 +153,22 @@ def dump ():
     for i in get_users():
         l.append(str(i))
     return l
+
+#---- Metodo utilizzato per verificare se è già stata creata una connessione valida alla 
+#     base di dati, se così non è richiama il metodo di inizializzazione
+def check_session():
+    if 'session' not in globals():
+        initialize_db('admin', '127.0.0.1:5432', 'orientamentodais_locale')
     
 
 #---- Metodo utilizzato per inserire un nuovo utente nella base di dati
-def insert_new_user(username, nome, cognome, email, data_nascita, is_professore, scuolaprovenienza = ''):
+def insert_new_user(username, nome, cognome, email, data_nascita, password, is_professore, scuolaprovenienza = ''):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
-    if 'session' not in globals():
-        initialize_db('admin', '127.0.0.1:5432', 'orientamentodais_locale')
+    check_session()
         
     try:
         # creo il nuovo oggetto da inserire nella tabella utenti
-        new_utente = Utenti(username = username, nome = nome, cognome = cognome, email = email, nascita = data_nascita)
+        new_utente = Utenti(username = username, nome = nome, cognome = cognome, email = email, nascita = data_nascita, password = password)
         
         # controllo anche a mano se è già presente l'utente che si vuole inserire in modo 
         # da ritornare il tipo di ritorno EXISTS, ciò non sarebbe possibile senza dato che 
@@ -213,5 +222,3 @@ def insert_new_user(username, nome, cognome, email, data_nascita, is_professore,
 #---- Metodo che contiene una query che legge tutti i gli utenti della base di dati e li stampa 
 def get_users():
     return list(session.query(Utenti).all())
-    
-    

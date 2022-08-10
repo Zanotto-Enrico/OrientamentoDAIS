@@ -103,6 +103,7 @@ def register ():
                               cognome = request.form.get("cognome"),
                               email = request.form.get("email"),
                               data_nascita = request.form.get("nascita"),
+                              password = request.form.get("password"),
                               is_professore = bool(request.form.get("professore")), 
                               scuolaprovenienza = request.form.get("scuola"))
   
