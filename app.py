@@ -6,6 +6,8 @@ from pickle import FALSE, TRUE
 from xml.dom.minidom import Document
 from flask import Flask, request, render_template, redirect, url_for, session
 import jyserver.Flask as jsf
+from database import *
+from datetime import date
 
 
 app = Flask ( __name__ )
@@ -70,6 +72,11 @@ log.addHandler(handler)
 
 #----------- PAGINE WEB
 
+@app.route('/test_db')
+def test_db():
+    print(dump())
+    return '<h1 style="text-align: center; font-family: Arial"><b>Guardare ouput nella console</b></h1>'
+
 #Carica la pagina di login
 @app.route ('/', methods=['GET','POST'])
 @app.route ('/login', methods=['GET','POST'])
@@ -90,12 +97,20 @@ def login ():
 @app.route ('/register', methods=['GET','POST'])
 def register ():
 	if request.method == 'POST':
-		request.form.get("username")
-		if True:															#QUA VA LA VERIFICA DI REGISTRAZIONE NEL DATABASE
+		
+		res = insert_new_user(username = request.form.get("username"), 
+                        	  nome = request.form.get("nome"), 
+                              cognome = request.form.get("cognome"),
+                              email = request.form.get("email"),
+                              data_nascita = request.form.get("nascita"),
+                              is_professore = bool(request.form.get("professore")), 
+                              scuolaprovenienza = request.form.get("scuola"))
+  
+		if res == Return.SUCCESS:															#QUA VA LA VERIFICA DI REGISTRAZIONE NEL DATABASE
 			return render_template("register.html", result="effettuata")
-		elif True:															# QUA NEL CASO FALLISSE
+		elif res == Return.FAILURE:															# QUA NEL CASO FALLISSE
 			return render_template("register.html", result="fallita")
-		elif True:															# QUA NEL CASO L'ACCOUNT ESISTA GIA'
+		elif res == Return.EXISTS:															# QUA NEL CASO L'ACCOUNT ESISTA GIA'
 			return render_template("register.html", result="giaEsistente")
 	else:
 		return render_template("register.html")
