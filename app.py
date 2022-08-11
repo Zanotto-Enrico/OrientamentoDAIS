@@ -241,19 +241,9 @@ def infoCorso ():
 			elif True:															# QUA NEL CASO FALLISSE
 				result="annullamento-fallito"
 
-		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
-			diz = { "id":12,
-					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
-					"struttura": "Centro Studi sulle Arti della Russia",
-					"modalita": "In Presenza",
-					"durata": "7 lezioni",
-					"iscrizioni": "aperte",
-					"postimin": "10",
-					"postimax": "110",
-					"iscritti": "80",
-					"prof": "Edsger Dijkstra",
-					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
-					"inizio": "15/05/2022"}
+		if session["idCorso"] != None:
+			# richiedo le informazioni relative al corso da analizzare tramite opportuno metodo
+			diz = get_info_corso(id_corso = session["idCorso"])
 			
 			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto)
 		else:

@@ -255,3 +255,45 @@ def is_professor(username):
         if u.username == username:
             return True
     return False
+
+
+def get_info_corso(id_corso):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
+    
+    # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
+    # l'id richiesto
+    corso = session.query(Corsi).filter_by(id_corso = id_corso).first()
+    
+    # eseguo una query per poter visualizzare il numero di lezioni di cui è costituito 
+    # il corso
+    n_lezioni = session.query(Lezioni).filter_by(id_corso = id_corso).count()
+    
+    # eseguo una query per poter visualizzare il numero di iscritti al corso
+    iscritti = session.query(IscrizioniCorsi).filter_by(id_corso = id_corso).count()
+    
+    # eseguo una query per poter ricevere il nome dell'aula e poi con il suo risultato 
+    # ricerco il nome dell'edificio con un'altra query
+    aula = session.query(Aule).filter_by(id_aula = corso.id_aula).first()
+    struttura = session.query(Edifici).filter_by(id_edificio = aula.id_edificio).first()
+    
+    
+    # traduco la modalità da valore booleano a stringa da inserire poi nel dizionario
+    modalita = ""
+    if corso.is_online == True:
+        modalita = "In Presenza"
+    else:
+        modalita = "Online"
+    
+    return { "id": corso.id_corso,
+			 "nome": corso.nome,
+			 "struttura": struttura.nome,
+			 "modalita": modalita,
+			 "durata": str(n_lezioni) + " lezioni",
+			 "iscrizioni": "aperte",
+			 "postimin": corso.min_partecipanti,
+			 "postimax": corso.max_partecipanti,
+			 "iscritti": iscritti,
+			 "prof": corso.docente,
+			 "descrizione": corso.descrizione,
+			 "inizio": "15/05/2022"}
