@@ -7,7 +7,7 @@ from enum import Enum
 
 # PER ACCEDERE AL DB USARE VARIABILE GLOBALE session
 # CREATA DENTRO AD initialize_db
-
+# coomento di prova
 Base = declarative_base()
 
 # definito un tipo enumerativo per la gestione dei casi che possono verificarsi quando
