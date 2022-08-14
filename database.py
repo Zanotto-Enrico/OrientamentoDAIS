@@ -1,3 +1,4 @@
+from cmath import cos
 from gettext import install
 import sqlalchemy
 from sqlalchemy import *
@@ -244,6 +245,11 @@ def check_user_login(username, password):
     return Return.FAILURE
 
 
+# + - - - - - - - - - - +
+# | METODI DI SUPPORTO  |
+# + - - - - - - - - - - +
+
+
 #---- Metodo utile per verificare se un certo username, e quindi utente, del sito sia registrato
 #     come docente o meno restituendone il risultato della verifica
 def is_professor(username):
@@ -255,7 +261,31 @@ def is_professor(username):
             return True
     return False
 
+#---- Metodo utile per resituire direttamente la struttura in cui un'aula (identificata dall'id
+#     passato come parametro) è situata
+def get_struttura(id_aula):
+    # eseguo una query per poter ricevere il nome dell'aula e poi con il suo risultato 
+    # ricerco il nome dell'edificio con un'altra query
+    aula = session.query(Aule).filter_by(id_aula = id_aula).first()
+    return session.query(Edifici).filter_by(id_edificio = aula.id_edificio).first()
 
+#---- Metodo utile per restituire il numero di iscritti ad un corso dato il suo id
+def get_iscritti(id_corso):
+    return session.query(IscrizioniCorsi).filter_by(id_corso = id_corso).count()
+
+#---- Metodo utile per restituire il numero di lezioni in cui un corso (identificato dall'id
+#     passato come argomento) è suddiviso 
+def get_nlezioni(id_corso):
+    return session.query(Lezioni).filter_by(id_corso = id_corso).count()
+
+
+# + - - - - - - - - - - - - - - - - - - - - - +
+# | METODI PER RESTITUZIONE DIZIONARI O LISTE |
+# + - - - - - - - - - - - - - - - - - - - - - +
+
+
+#---- Metodo che restituisce un dizionario rifornito di informazioni dettagliate relative 
+#     ad un singolo corso, quello passato come id
 def get_info_corso(id_corso):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
@@ -264,18 +294,7 @@ def get_info_corso(id_corso):
     # l'id richiesto
     corso = session.query(Corsi).filter_by(id_corso = id_corso).first()
     
-    # eseguo una query per poter visualizzare il numero di lezioni di cui è costituito 
-    # il corso
-    n_lezioni = session.query(Lezioni).filter_by(id_corso = id_corso).count()
-    
-    # eseguo una query per poter visualizzare il numero di iscritti al corso
-    iscritti = session.query(IscrizioniCorsi).filter_by(id_corso = id_corso).count()
-    
-    # eseguo una query per poter ricevere il nome dell'aula e poi con il suo risultato 
-    # ricerco il nome dell'edificio con un'altra query
-    aula = session.query(Aule).filter_by(id_aula = corso.id_aula).first()
-    struttura = session.query(Edifici).filter_by(id_edificio = aula.id_edificio).first()
-    
+    struttura = get_struttura(id_aula=corso.id_aula)
     
     # traduco la modalità da valore booleano a stringa da inserire poi nel dizionario
     modalita = ""
@@ -286,13 +305,52 @@ def get_info_corso(id_corso):
     
     return { "id": corso.id_corso,
 			 "nome": corso.nome,
-			 "struttura": struttura.nome,
+			 "struttura": struttura.nome + " - " + struttura.indirizzo,
 			 "modalita": modalita,
-			 "durata": str(n_lezioni) + " lezioni",
-			 "iscrizioni": "aperte",
+			 "durata": str(get_nlezioni(corso.id_corso)) + " lezioni",
+			 "iscrizioni": "Aperte",
 			 "postimin": corso.min_partecipanti,
 			 "postimax": corso.max_partecipanti,
-			 "iscritti": iscritti,
+			 "iscritti": get_iscritti(id_corso=corso.id_corso),
 			 "prof": corso.docente,
 			 "descrizione": corso.descrizione,
 			 "inizio": "15/05/2022"}
+    
+
+#---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
+#     rappresentare in maniera minimal le informazioni di un corso
+def get_lista_corsi():
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
+    
+    # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
+    # l'id richiesto
+    corsi = list(session.query(Corsi).all())
+    
+    infos = []
+    for c in corsi:
+        info = {}
+        
+        info["id"] = c.id_corso
+        info["nome"] = c.nome
+        struttura = get_struttura(id_aula=c.id_aula)
+        info["struttura"] = struttura.nome + " - " + struttura.indirizzo
+        
+        if c.is_online == True:
+            info["modalita"] = "In Presenza"
+        else:
+            info["modalita"] = "Online"
+        
+        info["durata"] = str(get_nlezioni(id_corso=c.id_corso)) + " lezioni"
+        
+        info["iscrizioni"] = "Aperte"                                               # DA CAMBIARE UNA VOLTA MODIFICATA STRUTTURA DB
+        
+        info["postimax"] = c.max_partecipanti
+        
+        info["iscritti"] = get_iscritti(id_corso=c.id_corso)
+        
+        infos.append(info)
+        
+    return infos
+    
+    

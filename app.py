@@ -137,25 +137,7 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET','POST'])
 def listaCorsi ():
 	if "user" in session:
-		listaDiDiz = [																					# LISTA DI DIZIONARI CHE RAPPRESENTANO TUTTI I CORSI
-			{ "id":1,																					# VA SOSTITUITA CON CHIAMATA A FUNZIONE APPOSITA
-			"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
-			"struttura": "Centro Studi sulle Arti della Russia",
-			"modalita": "In Presenza",
-			"durata": "7 lezioni",
-			"iscrizioni": "aperte",
-			"postimax": "110",
-			"iscritti": "80"
-			},
-			{ "id":2,
-			"nome": "Laboratorio di Intelligenza Artificaiale avanzata",
-			"struttura": "Dipartimento di Scienze Ambientali",
-			"modalita": "Online",
-			"durata": "5 lezioni",
-			"iscrizioni": "chiuse",
-			"postimax": "30",
-			"iscritti": "30"
-			}]
+		listaDiDiz = get_lista_corsi()
 		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -335,7 +317,7 @@ def listaIscritti ():
 @app.route ('/profilo', methods=['GET','POST'])
 def profilo ():
 	if "user" in session:
-	
+		get_lista_corsi()
 		diz = { "id":12,												# DIZIONARIO DA RIEMPIRE CON LE INFO PRIVATE DELL'UTENTE
 				"username": "OttoZan",
 				"nome": "Carlo",
