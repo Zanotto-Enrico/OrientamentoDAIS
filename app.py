@@ -267,7 +267,7 @@ def eliminaCorso ():
 def modificaCorso ():
 	if "user" in session:
 
-		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
+		if session["idCorso"] != None:
 			diz = get_info_corso(id_corso = session["idCorso"])
 			
 			return render_template("modCorso.html", info=diz, isProfessor=session["isProfessor"])
@@ -295,14 +295,7 @@ def listaIscritti ():
 @app.route ('/profilo', methods=['GET','POST'])
 def profilo ():
 	if "user" in session:
-		diz = { "id":12,												# DIZIONARIO DA RIEMPIRE CON LE INFO PRIVATE DELL'UTENTE
-				"username": "OttoZan",
-				"nome": "Carlo",
-				"cognome": "Rossi",
-				"email": "carlo.rossi@gmail.com",
-				"nascita": "30/02/1990",
-				"account": "studente",
-				"corsi": "10" }
+		diz = get_info_utente(session["user"])
 
 		return render_template("profilo.html", isProfessor=session["isProfessor"], info=diz)
 	else:

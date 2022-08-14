@@ -5,6 +5,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum
+from datetime import date
 
 # PER ACCEDERE AL DB USARE VARIABILE GLOBALE session
 # CREATA DENTRO AD initialize_db
@@ -278,6 +279,14 @@ def get_iscritti(id_corso):
 def get_nlezioni(id_corso):
     return session.query(Lezioni).filter_by(id_corso = id_corso).count()
 
+#---- Metodo che, passato l'username dello studente, restituisce il numero di corsi ai quali
+#     appare iscritto
+def get_numeroiscrizioni(username):
+    return session.query(IscrizioniCorsi).filter_by(username = username).count()
+
+def get_corsitenuti(prof):
+    return session.query(Corsi).filter_by(docente = prof).count()
+
 
 # + - - - - - - - - - - - - - - - - - - - - - +
 # | METODI PER RESTITUZIONE DIZIONARI O LISTE |
@@ -359,4 +368,38 @@ def get_lista_corsi():
         infos.append(info)
         
     return infos
+
+#---- Metodo avente il compito di restituire tutte le informazioni relative ad un utente, a prescindere
+#     dal suo tipo (docente o studente)
+def get_info_utente(username):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     
+    try:
+        user = session.query(Utenti).filter_by(username = username).first()
+        
+        corsi = 0
+        tipo_utente = ""
+        # se l'utente è un professore salvo il numero di corsi da lui tenuti e il suo tipo di utente 
+        # ("Professore") mentre per gli studenti, oltre al loro tipo, salvo il numero di corsi ai 
+        # quali sono iscritti
+        if is_professor(username = user.username):
+            corsi = get_corsitenuti(user.username)
+            tipo_utente = "Professore"
+        else:
+            corsi = get_numeroiscrizioni(user.username)
+            tipo_utente = "Studente"
+            
+        return {    
+                    "username": user.username,
+                    "nome": user.nome,
+                    "cognome": user.cognome,
+                    "email": user.email,
+                    "nascita": user.nascita,
+                    "account": tipo_utente,
+                    "corsi": corsi 
+                }
+        
+    except Exception as e:
+        print("[!] - Errore nella restituzione delle informazioni relative all'utente con username: " + username + ", verificare il metodo get_info_utente(...)")
+        print(e)
