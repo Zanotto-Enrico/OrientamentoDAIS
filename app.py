@@ -239,19 +239,8 @@ def gestisciCorso ():
 	if "user" in session:
 		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
 
-		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
-			diz = { "id":12,
-					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
-					"struttura": "Centro Studi sulle Arti della Russia",
-					"modalita": "In Presenza",
-					"durata": "7 lezioni",
-					"iscrizioni": "aperte",
-					"postimin": "10",
-					"postimax": "110",
-					"iscritti": "80",
-					"prof": "Edsger Dijkstra",
-					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
-					"inizio": "15/05/2022"}
+		if session["idCorso"] != None:
+			diz = get_info_corso(id_corso = session["idCorso"])
 			
 			return render_template("gestisciCorso.html", info=diz, isProfessor=session["isProfessor"])
 		else:
@@ -279,18 +268,7 @@ def modificaCorso ():
 	if "user" in session:
 
 		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEL CORSO
-			diz = { "id":12,
-					"nome": "Organizzazione di eventi culturali L'arte ai giovani! Incontriamo l'arte russa",
-					"struttura": "Centro Studi sulle Arti della Russia",
-					"modalita": "In Presenza",
-					"durata": "7 lezioni",
-					"iscrizioni": "aperte",
-					"postimin": "10",
-					"postimax": "110",
-					"iscritti": "80",
-					"prof": "Edsger Dijkstra",
-					"descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
-					"inizio": "15/05/2022"}
+			diz = get_info_corso(id_corso = session["idCorso"])
 			
 			return render_template("modCorso.html", info=diz, isProfessor=session["isProfessor"])
 		else:
@@ -317,7 +295,6 @@ def listaIscritti ():
 @app.route ('/profilo', methods=['GET','POST'])
 def profilo ():
 	if "user" in session:
-		get_lista_corsi()
 		diz = { "id":12,												# DIZIONARIO DA RIEMPIRE CON LE INFO PRIVATE DELL'UTENTE
 				"username": "OttoZan",
 				"nome": "Carlo",
@@ -325,7 +302,7 @@ def profilo ():
 				"email": "carlo.rossi@gmail.com",
 				"nascita": "30/02/1990",
 				"account": "studente",
-				"corsi": "10"}
+				"corsi": "10" }
 
 		return render_template("profilo.html", isProfessor=session["isProfessor"], info=diz)
 	else:

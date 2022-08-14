@@ -289,32 +289,38 @@ def get_nlezioni(id_corso):
 def get_info_corso(id_corso):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
+    print("\n\n" + id_corso + "\n\n")
     
-    # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
-    # l'id richiesto
-    corso = session.query(Corsi).filter_by(id_corso = id_corso).first()
-    
-    struttura = get_struttura(id_aula=corso.id_aula)
-    
-    # traduco la modalità da valore booleano a stringa da inserire poi nel dizionario
-    modalita = ""
-    if corso.is_online == True:
-        modalita = "In Presenza"
-    else:
-        modalita = "Online"
-    
-    return { "id": corso.id_corso,
-			 "nome": corso.nome,
-			 "struttura": struttura.nome + " - " + struttura.indirizzo,
-			 "modalita": modalita,
-			 "durata": str(get_nlezioni(corso.id_corso)) + " lezioni",
-			 "iscrizioni": "Aperte",
-			 "postimin": corso.min_partecipanti,
-			 "postimax": corso.max_partecipanti,
-			 "iscritti": get_iscritti(id_corso=corso.id_corso),
-			 "prof": corso.docente,
-			 "descrizione": corso.descrizione,
-			 "inizio": "15/05/2022"}
+    try:
+        # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
+        # l'id richiesto
+        corso = session.query(Corsi).filter_by(id_corso = str(id_corso)).first()
+        print (corso)
+        
+        struttura = get_struttura(id_aula=int(corso.id_aula))
+        
+        # traduco la modalità da valore booleano a stringa da inserire poi nel dizionario
+        modalita = ""
+        if corso.is_online == True:
+            modalita = "In Presenza"
+        else:
+            modalita = "Online"
+        
+        return { "id": corso.id_corso,
+                "nome": corso.nome,
+                "struttura": struttura.nome + " - " + struttura.indirizzo,
+                "modalita": modalita,
+                "durata": str(get_nlezioni(corso.id_corso)) + " lezioni",
+                "iscrizioni": "Aperte",
+                "postimin": corso.min_partecipanti,
+                "postimax": corso.max_partecipanti,
+                "iscritti": get_iscritti(id_corso=corso.id_corso),
+                "prof": corso.docente,
+                "descrizione": corso.descrizione,
+                "inizio": "15/05/2022"}
+    except Exception as e:
+        print("[!] - Errore nella restituzione delle informazioni relative al corso con id: " + id_corso + ", verificare il metodo get_info_corso(...)\n")
+        print(e)
     
 
 #---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
@@ -327,6 +333,7 @@ def get_lista_corsi():
     # l'id richiesto
     corsi = list(session.query(Corsi).all())
     
+    # creo la lista di dizionari
     infos = []
     for c in corsi:
         info = {}
@@ -352,5 +359,4 @@ def get_lista_corsi():
         infos.append(info)
         
     return infos
-    
     
