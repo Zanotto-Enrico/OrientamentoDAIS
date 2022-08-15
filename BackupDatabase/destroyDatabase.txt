@@ -1,0 +1,8 @@
+drop database orientamento;
+drop role ruoloadmin;
+drop role ruoloprof;
+drop role ruoloutente;
+drop user utente;
+drop user prof;
+drop user admin;
+create database orientamento;
