@@ -2,6 +2,7 @@ from distutils.log import info
 from locale import delocalize
 import logging
 from logging.handlers import RotatingFileHandler
+from ossaudiodev import SNDCTL_DSP_BIND_CHANNEL
 from pickle import FALSE, TRUE
 from xml.dom.minidom import Document
 from flask import Flask, request, render_template, redirect, url_for, session
@@ -16,7 +17,7 @@ app.secret_key = "JG{~^VQnAX8dK*4P'=/XTg^rBhH_psx+/zK9#>YkR_bWd7Av"
 #---------- JavaScript
 
 @jsf.use(app)
-class Calendario:
+class JavaScriptServer:
 	def __init__(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
@@ -33,7 +34,7 @@ class Calendario:
 			self.totalCount +=1
 		else:
 			self.js.document.getElementById(giorno).style.display = "none"
-			self.js.document.getElementById("orario"+giorno).removeAttribute('required');
+			self.js.document.getElementById("orario"+giorno).removeAttribute('required')
 			self.giorni[giorno] = 0
 			self.totalCount -=1
 		if(self.totalCount == 0):
@@ -53,6 +54,13 @@ class Calendario:
 		for aula in range(i, 19):
 			self.js.document.getElementById(i).style.display = "none"
 
+	def CheckBoxProfessore(self):
+		if(self.js.document.getElementById("scuola").disabled == True ):
+			self.js.document.getElementById("scuola").removeAttribute('disabled')
+			self.js.document.getElementById("scuola").setAttribute('required', '')
+		else:
+			self.js.document.getElementById("scuola").removeAttribute('required')
+			self.js.document.getElementById("scuola").setAttribute('disabled', '')
 
 
 	def reset(self):
@@ -115,13 +123,13 @@ def register ():
                               scuolaprovenienza = request.form.get("scuola"))
   
 		if res == Return.SUCCESS:															#QUA VA LA VERIFICA DI REGISTRAZIONE NEL DATABASE
-			return render_template("register.html", result="effettuata")
+			return JavaScriptServer.render(render_template("register.html", result="effettuata"))
 		elif res == Return.FAILURE:															# QUA NEL CASO FALLISSE
-			return render_template("register.html", result="fallita")
+			return JavaScriptServer.render(render_template("register.html", result="fallita"))
 		elif res == Return.EXISTS:															# QUA NEL CASO L'ACCOUNT ESISTA GIA'
-			return render_template("register.html", result="giaEsistente")
+			return JavaScriptServer.render(render_template("register.html", result="giaEsistente"))
 	else:
-		return render_template("register.html")
+		return JavaScriptServer.render(render_template("register.html"))
 
 
 #Carica la pagina di benvenuto
@@ -152,7 +160,7 @@ def creaCorso ():
 			"Delta": ["aula7", "aula8", "aula9"],
 			"Epsilon": ["aula10", "aula11", "aula12"],
 			"Zeta": ["aula13", "aula14", "aula15", "aula16"]}
-		pagina = Calendario
+		pagina = JavaScriptServer
 		pagina.setEdifici(diz)
 		pagina.reset()
 		return pagina.render(render_template("creaCorso.html", diz=diz))

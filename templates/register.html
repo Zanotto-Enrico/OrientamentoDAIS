@@ -44,12 +44,12 @@
                             </div>
                             <div class="divcheck">
                                 <label class="container"> Sei un docente?
-                                    <input type="checkbox" checked="checked" name = "professore">
+                                    <input type="checkbox" name = "professore" id = "professore" onchange="server.CheckBoxProfessore()" >
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="divtextbox">
-                                <input type = "text" name = "scuola" placeholder="scuola di provenienza" required class="textbox">
+                                <input type = "text" name = "scuola" id = "scuola" placeholder="scuola di provenienza" class="textbox" required>
                             </div>
                         </div>
 

@@ -162,7 +162,7 @@ body
     border:none;
     text-align: center;
     border-radius: 3px;
-}
+}:disabled {background-color:grey;}
 .halftextbox{
 
     background-color: var(--color1);
