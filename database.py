@@ -1,11 +1,22 @@
 from cmath import cos
 from gettext import install
+import hashlib
 import sqlalchemy
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum
 from datetime import date
+
+#-------------------------------------------------------------
+# VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
+# Se si necessita di cambiare la modalità di connessione basta
+# modificare queste due variabili
+address = "orientamentodais.com"
+database = "orientamento"
+# per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
+#-------------------------------------------------------------
+
 
 # PER ACCEDERE AL DB USARE VARIABILE GLOBALE session
 # CREATA DENTRO AD initialize_db
@@ -125,15 +136,15 @@ class Corsi(Base):
 
 
 #---- Metodo utilizzato per inizializzare la sessione di connessione alla base di dati
-def initialize_db ( user, db, table ):
+def initialize_db (user):
     try:
         engine = None
         if user == 'admin':
-            engine = create_engine('postgresql+psycopg2://admin:yQ9q8XgWYzYQv3RWccc3@' + db + '/' + table)
+            engine = create_engine('postgresql+psycopg2://admin:yQ9q8XgWYzYQv3RWccc3@' + address + '/' + database)
         elif user == 'utente':
-            engine = create_engine('postgresql+psycopg2://utente:CLgC92dK9DbEkrMSRS4j@orientamentodais.com/orientamento')
+            engine = create_engine('postgresql+psycopg2://utente:CLgC92dK9DbEkrMSRS4j@' + address + '/' + database)
         elif user == 'prof':
-            engine = create_engine('postgresql+psycopg2://prof:7TpSZbBYJTcGUxxyqtSD@orientamentodais.com/orientamento')
+            engine = create_engine('postgresql+psycopg2://prof:7TpSZbBYJTcGUxxyqtSD@' + address + '/' + database)
         else:
             print('Utente non esistente')
 
@@ -148,8 +159,7 @@ def initialize_db ( user, db, table ):
 
 
 def dump ():
-    #initialize_db('admin', 'orientamentodais.com:5432', 'orientamento')
-    initialize_db('admin', '127.0.0.1:5432', 'orientamentodais_locale')
+    initialize_db('admin')
     l = list()
     for i in get_users():
         l.append(str(i))
@@ -159,7 +169,7 @@ def dump ():
 #     base di dati, se così non è richiama il metodo di inizializzazione
 def check_session():
     if 'session' not in globals():
-        initialize_db('admin', '127.0.0.1:5432', 'orientamentodais_locale')
+        initialize_db('admin')
     
 
 #---- Metodo utilizzato per inserire un nuovo utente nella base di dati
@@ -168,8 +178,10 @@ def insert_new_user(username, nome, cognome, email, data_nascita, password, is_p
     check_session()
         
     try:
+        # prima di tutto genero l'hash della nuova password
+        passwordHash = hashlib.sha256(password.encode()).hexdigest()
         # creo il nuovo oggetto da inserire nella tabella utenti
-        new_utente = Utenti(username = username, nome = nome, cognome = cognome, email = email, nascita = data_nascita, password = password)
+        new_utente = Utenti(username = username, nome = nome, cognome = cognome, email = email, nascita = data_nascita, password = passwordHash)
         
         # controllo anche a mano se è già presente l'utente che si vuole inserire in modo 
         # da ritornare il tipo di ritorno EXISTS, ciò non sarebbe possibile senza dato che 
@@ -240,7 +252,9 @@ def check_user_login(username, password):
     check_session()
     
     for u in get_users():
-        if (u.username == username and u.password == password):
+        # prima di tutto genero l'hash della nuova password e poi comparo gli hash
+        passwordHash = hashlib.sha256(password.encode()).hexdigest()
+        if (u.username == username and u.password == passwordHash):
             return Return.SUCCESS
     
     return Return.FAILURE

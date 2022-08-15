@@ -10,6 +10,7 @@ username VARCHAR(50) PRIMARY KEY,
 nome VARCHAR(50) NOT NULL,
 cognome VARCHAR(50) NOT NULL,
 email VARCHAR(50) NOT NULL,
+password VARCHAR(256) NOT NULL,
 nascita DATE NOT NULL
 );
 
@@ -100,7 +101,7 @@ GRANT DELETE,UPDATE,INSERT ON Corsi,Lezioni TO ruoloutente;
 CREATE ROLE ruoloadmin;
 GRANT ALL ON DATABASE orientamento TO ruoloadmin;
 GRANT USAGE ON SCHEMA public TO ruoloadmin;
-GRANT ALL ON ALL TABLES IN SCHEMA public TO ruoloadmin;\
+GRANT ALL ON ALL TABLES IN SCHEMA public TO ruoloadmin;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO ruoloadmin;
 
 
