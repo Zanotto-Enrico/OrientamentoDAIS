@@ -211,25 +211,30 @@ def calendario ():
 def infoCorso ():
 	if "user" in session:
 		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
-		iscritto = False														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
+		iscritto = studente_iscrizione(request.form.get("idCorso"), session["user"])														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
 		iscrivimi = request.form.get("iscrivimi")											# E FALSE ALTRIMENTI (TRAMITE FUNZIONE APPOSITA IN DATBASE.PY)
 		annulla = request.form.get("annulla")
 		result=""
 
 		if iscrivimi == "1":
 			if iscritto == True:												# VERIFICO CHE L'UTENTE NON SIA GIà ISCRITTO
-				result=""
-			elif True:															# ISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
-				result="effettuata"
-			elif True:															# QUA NEL CASO FALLISSE
-				result="fallita"
+				result = "Già iscritto"
+			else:															# ISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
+				try:
+					result= IscrizioniCorsi(id_corso = request.form.get("idCorso"), username = session["user"])
+					session.add(result)
+					session.commit()
+				except:
+					print("Errore nell'iscrizione al corso, guardare la funzione infoCorso()!")
 		if annulla == "1":
 			if iscritto == False:												# VERIFICO CHE L'UTENTE NON SIA GIà NON ISCRITTO
-				result=""
-			elif True:															# DISISCRIVIAMO L'UTENTE E RITORNIAMO TRUE SE RIUSCITA
-				result="annullata"
-			elif True:															# QUA NEL CASO FALLISSE
-				result="annullamento-fallito"
+				result="Già disiscritto"
+			else:
+				try:
+					result = session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.username == session["user"], IscrizioniCorsi.id_corso == request.form.get("idCorso"))).delete()
+					session.commit()
+				except:
+					print("Errore nell'annullamento dell'iscrione a questo corso, guardare la funzione infoCorso()!")
 
 		if session["idCorso"] != None:
 			# richiedo le informazioni relative al corso da analizzare tramite opportuno metodo

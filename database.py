@@ -259,7 +259,6 @@ def check_user_login(username, password):
     
     return Return.FAILURE
 
-
 # + - - - - - - - - - - +
 # | METODI DI SUPPORTO  |
 # + - - - - - - - - - - +
@@ -301,6 +300,10 @@ def get_numeroiscrizioni(username):
 def get_corsitenuti(prof):
     return session.query(Corsi).filter_by(docente = prof).count()
 
+def studente_iscrizione(id_Corso, id_Studente):
+    if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)) != None):
+        return True
+    return False
 
 # + - - - - - - - - - - - - - - - - - - - - - +
 # | METODI PER RESTITUZIONE DIZIONARI O LISTE |
@@ -417,3 +420,4 @@ def get_info_utente(username):
     except Exception as e:
         print("[!] - Errore nella restituzione delle informazioni relative all'utente con username: " + username + ", verificare il metodo get_info_utente(...)")
         print(e)
+
