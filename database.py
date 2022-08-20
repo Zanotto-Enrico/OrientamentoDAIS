@@ -300,11 +300,30 @@ def get_numeroiscrizioni(username):
 def get_corsitenuti(prof):
     return session.query(Corsi).filter_by(docente = prof).count()
 
-def studente_iscrizione(id_Corso, id_Studente):
+def check_iscrizione(id_Corso, id_Studente):
     if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)) != None):
         return True
     return False
 
+def gestione_iscriz(id_corso, username, tipo):
+    if(tipo == "I"):   
+        try:
+            result = IscrizioniCorsi(IscrizioniCorsi.id_corso == id_corso, IscrizioniCorsi.username == username)
+            session.add(result)
+            session.commit()
+            res = True
+        except:
+            res = False
+    if(tipo == "A"):
+        try:
+            result = session.query(IscrizioniCorsi).filter(IscrizioniCorsi.id_corso == id_corso, IscrizioniCorsi.username == username).delete()
+            session.commit()
+            res = True
+        except:
+            res = False
+    
+    return res
+    
 # + - - - - - - - - - - - - - - - - - - - - - +
 # | METODI PER RESTITUZIONE DIZIONARI O LISTE |
 # + - - - - - - - - - - - - - - - - - - - - - +
