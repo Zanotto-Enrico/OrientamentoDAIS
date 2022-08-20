@@ -323,7 +323,7 @@ def gestione_iscriz(id_corso, username, tipo):
             res = False
     
     return res
-    
+
 # + - - - - - - - - - - - - - - - - - - - - - +
 # | METODI PER RESTITUZIONE DIZIONARI O LISTE |
 # + - - - - - - - - - - - - - - - - - - - - - +
@@ -440,3 +440,11 @@ def get_info_utente(username):
         print("[!] - Errore nella restituzione delle informazioni relative all'utente con username: " + username + ", verificare il metodo get_info_utente(...)")
         print(e)
 
+def get_edifici_aule():
+    res = {}
+
+    for ed in session.query(Edifici.id_edificio).all():
+        list = []
+        res[ed] = session.query(Aule.nome).filter(Aule.id_edificio == ed).all()
+
+    return res

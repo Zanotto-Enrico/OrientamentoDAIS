@@ -2,7 +2,7 @@ from distutils.log import info
 from locale import delocalize
 import logging
 from logging.handlers import RotatingFileHandler
-from ossaudiodev import SNDCTL_DSP_BIND_CHANNEL
+#from ossaudiodev import SNDCTL_DSP_BIND_CHANNEL
 from pickle import FALSE, TRUE
 from xml.dom.minidom import Document
 from flask import Flask, request, render_template, redirect, url_for, session
@@ -154,12 +154,7 @@ def listaCorsi ():
 @app.route ('/creaCorso', methods=['GET'])
 def creaCorso ():
 	if "user" in session and session["isProfessor"] == True:
-		diz = {
-			"Alfa": ["aula1", "aula2", "aula3"],
-			"Beta": ["aula4", "aula5", "aula6"],
-			"Delta": ["aula7", "aula8", "aula9"],
-			"Epsilon": ["aula10", "aula11", "aula12"],
-			"Zeta": ["aula13", "aula14", "aula15", "aula16"]}
+		diz = get_edifici_aule()
 		pagina = JavaScriptServer
 		pagina.setEdifici(diz)
 		pagina.reset()
