@@ -301,14 +301,14 @@ def get_corsitenuti(prof):
     return session.query(Corsi).filter_by(docente = prof).count()
 
 def check_iscrizione(id_Corso, id_Studente):
-    if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)) != None):
+    if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)).first() != None):
         return True
     return False
 
 def gestione_iscriz(id_corso, username, tipo):
     if(tipo == "I"):   
         try:
-            result = IscrizioniCorsi(IscrizioniCorsi.id_corso == id_corso, IscrizioniCorsi.username == username)
+            result = IscrizioniCorsi(id_corso = id_corso,username = username)
             session.add(result)
             session.commit()
             res = True
@@ -316,7 +316,7 @@ def gestione_iscriz(id_corso, username, tipo):
             res = False
     if(tipo == "A"):
         try:
-            result = session.query(IscrizioniCorsi).filter(IscrizioniCorsi.id_corso == id_corso, IscrizioniCorsi.username == username).delete()
+            result = session.query(IscrizioniCorsi).filter_by(id_corso = id_corso, username = username).delete()
             session.commit()
             res = True
         except:
@@ -442,9 +442,10 @@ def get_info_utente(username):
 
 def get_edifici_aule():
     res = {}
-
-    for ed in session.query(Edifici.id_edificio).all():
-        list = []
-        res[ed] = session.query(Aule.nome).filter(Aule.id_edificio == ed).all()
-
+    for ed in session.query(Edifici.id_edificio, Edifici.nome).all():
+        lista = []
+        for aula in session.query(Aule.nome).filter(Aule.id_edificio == ed[0]).all():
+            lista.append(aula[0])
+        res[ed[1]] = lista
+    print(res)
     return res

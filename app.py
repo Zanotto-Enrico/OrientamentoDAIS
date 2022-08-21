@@ -151,7 +151,7 @@ def listaCorsi ():
 		return redirect(url_for("login"))
 
 #Carica la pagina per la creazione di un nuovo corso (solo per prof)
-@app.route ('/creaCorso', methods=['GET'])
+@app.route ('/creaCorso', methods=['GET', 'POST'])
 def creaCorso ():
 	if "user" in session and session["isProfessor"] == True:
 		diz = get_edifici_aule()
@@ -206,28 +206,29 @@ def calendario ():
 def infoCorso ():
 	if "user" in session:
 		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
-		iscritto = check_iscrizione(request.form.get("idCorso"), session["user"])														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
+		iscritto = check_iscrizione(session["idCorso"], session["user"])														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
 		iscrivimi = request.form.get("iscrivimi")											# E FALSE ALTRIMENTI (TRAMITE FUNZIONE APPOSITA IN DATBASE.PY)
 		annulla = request.form.get("annulla")
 		result=""
-
 		if iscrivimi == "1":
 			if iscritto == True:												# VERIFICO CHE L'UTENTE NON SIA GIà ISCRITTO
 				result = "Già iscritto"
-			elif gestione_iscriz(request.form.get("idCorso"), session["user"], "I") == True:
+			elif gestione_iscriz(session["idCorso"], session["user"], "I") == True:
 				result = "effettuata"
+				iscritto = True
 			else:
 				result = "fallita"
 		if annulla == "1":
 			if iscritto == False:												# VERIFICO CHE L'UTENTE NON SIA GIà NON ISCRITTO
 				result="Già disiscritto"
-			elif gestione_iscriz(request.form.get("idCorso"), session["user"], "A") == True:
+			elif gestione_iscriz(session["idCorso"], session["user"], "A") == True:
 				result = "annullata"
+				iscritto = False
 			else:
 				result = "annullamento-fallito"
 
 		if session["idCorso"] != None:
-			# richiedo le informazioni relative al corso da analizzare tramite opportuno metodo
+			# ric/infoCorsohiedo le informazioni relative al corso da analizzare tramite opportuno metodo
 			diz = get_info_corso(id_corso = session["idCorso"])
 			
 			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto)
