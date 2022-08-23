@@ -49,10 +49,11 @@ class JavaScriptServer:
 		i = 0
 		for aula in self.diz[str(edificio)]:
 			self.js.document.getElementById(i).style.display = "inline-block"
-			self.js.document.getElementById(i).innerHTML = aula
+			self.js.document.getElementById(i).innerHTML = aula[1]
+			self.js.document.getElementById(i).value = aula[0]
 			i+=1
-		for aula in range(i, 19):
-			self.js.document.getElementById(i).style.display = "none"
+		for aula in range(i, 19,1):
+			self.js.document.getElementById(aula).style.display = "none"
 
 	def CheckBoxProfessore(self):
 		if(self.js.document.getElementById("scuola").disabled == True ):
@@ -66,6 +67,9 @@ class JavaScriptServer:
 	def reset(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
+
+	def togglePopup(self,id):
+		self.js.document.getElementById(id).style.display = "none"
 
 
 #---------- LOG FILES
@@ -158,7 +162,27 @@ def creaCorso ():
 		pagina = JavaScriptServer
 		pagina.setEdifici(diz)
 		pagina.reset()
-		return pagina.render(render_template("creaCorso.html", diz=diz))
+		collisioni = []
+		if request.method == 'POST':
+			collisioni = insert_new_corso(nome = request.form.get("name"),
+						descrizione = request.form.get("description"),
+						is_online = request.form.get("tipologia")=="online",
+						min_stud = request.form.get("num-min"),
+						max_stud = request.form.get("num-max"),
+						docente = session["user"],
+						id_aula = request.form.get("aula"),
+						first_week = request.form.get("firstWeek"),
+						last_week = request.form.get("lastWeek"),
+						orari = [request.form.get("orariolun"),request.form.get("orariomar"),request.form.get("orariomer"),
+								request.form.get("orariogio"),request.form.get("orarioven"),request.form.get("orariosab"),None])
+
+		if(collisioni == None):
+			return pagina.render(render_template("creaCorso.html",diz=diz,errore=1))
+		elif(len(collisioni) > 0):
+			return pagina.render(render_template("creaCorso.html",diz=diz,collisioni = get_info_lezioni(lezioni=collisioni), errore=0))
+		else:
+			return pagina.render(render_template("creaCorso.html", diz=diz, errore=0))
+
 	else:
 		return redirect(url_for("login"))
 

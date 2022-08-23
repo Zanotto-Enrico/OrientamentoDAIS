@@ -7,13 +7,45 @@
 
 {% block contenuto %}
     <h1> Creazione corso</h1>
+    {% if collisioni == None or collisioni|length < 1 %}
+    <div id = "popup1" class="popup" style="display: none;">
+    {% else %}
+    <div id = "popup1" class="popup" style="display: block;">
+    {% endif %}
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="server.togglePopup('popup1')">&times;</div>
+            <h2>Attenzione</h2>
+            <p> Non è stato possibile creare il corso poichè l'aula selezionata risulta essere già occupata nei seguenti giorni e fasce orarie</p>
+            <textarea class="text-occupate">
+{% for item in collisioni %}
+Il: {{item[0][0]}} Dalle: {{item[0][1]}} Alle: {{item[0][2]}}
+{% endfor %}
+            </textarea>
+        </div>
+    </div>
+
+    {% if errore == 1 %}
+    <div id = "popup2" class="popup2" style="display: block;">
+    {% else %}
+    <div id = "popup2" class="popup2" style="display: none;">
+    {% endif %}
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="server.togglePopup('popup2')">&times;</div>
+            <h2>Attenzione</h2>
+            <p> Non è stato possibile creare il corso poichè le informazioni inserite risultano essere incorrette o incomplete</p>
+            <div class="ok-btn" onclick="server.togglePopup('popup2')">ok</div>
+        </div>
+    </div>
+
     <div class="div-form-creazione">
         <form method="POST">
             <div class="column">
             
                 <div class="div-textbox">
                     <label  class="label1">Nome del corso</label><br>
-                    <input type="text" class="input-label-1" id="name" required="yes">
+                    <input type="text" class="input-label-1" name="name" required="yes">
                 </div>
                 <div class="column-drop">
                     <div class="div-textbox">
@@ -40,9 +72,9 @@
                 <div class="div-num">
                     <label class="label1">Numero di partecipanti</label><br>
                     <label class="label1">Minimo</label>
-                    <input type="number" class="input-number-1" id="num-min" min="1" max="999" value="0">
+                    <input type="number" class="input-number-1" name="num-min" min="1" max="999" value="0">
                     <label class="label1">Massimo</label>
-                    <input type="number" class="input-number-1" id="num-max" min="1" max="999" value="0">
+                    <input type="number" class="input-number-1" name="num-max" min="1" max="999" value="0">
                 </div>
                 <div class="div-textbox">
                     <label class="label1">Tipologia </label>
@@ -53,7 +85,7 @@
                 </div>
                 <div class="div-textbox">
                     <label  class="label1">Breve descrizione   (max 300 lettere)</label><br>
-                    <textarea class="input-label-2" rows="5" id = "description" maxlength="300" required="yes"></textarea><br>
+                    <textarea class="input-label-2" rows="5" name="description" maxlength="300" required="yes"></textarea><br>
                 </div>
                 <div class="div-checkbox">
                     <label class="container-check">Aprire le iscrizioni da subito?
@@ -93,11 +125,11 @@
                 </div>
                 <div class="div-textbox">
                     <label  class="label1" id="firstWeek">Prima settimana</label><br>
-                    <input type="week"  class="dropdown-week" required="yes"><br>
+                    <input type="week" name="firstWeek" class="dropdown-week" required="yes"><br>
                 </div>
                 <div class="div-textbox">
                     <label  class="label1" id="lastWeek">Ultima settimana</label><br>
-                    <input type="week"  class="dropdown-week" required="yes"><br>
+                    <input type="week" name="lastWeek" class="dropdown-week" required="yes"><br>
                 </div>
                 <label  class="label2" id="timeStart">Orari</label><br>
                 <label  class="label1" id="almenoUnGiorno">Selezionare almeno un giorno </label>
@@ -105,72 +137,72 @@
                     <label  class="label3" id="timeStart">Lun:</label>
                     <select name="orariolun" class="input-dropdown-2" id="orariolun">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
                 <div class="div-time" id = "mar">
                     <label  class="label3" id="timeStart">Mar:</label>
                     <select name="orariomar" class="input-dropdown-2" id="orariomar">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
                 <div class="div-time" id = "mer">
                     <label  class="label3" id="timeStart">Mer:</label>
                     <select name="orariomer" class="input-dropdown-2" id="orariomer">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
                 <div class="div-time" id = "gio">
                     <label  class="label3" id="timeStart">Gio:</label>
                     <select name="orariogio" class="input-dropdown-2" id="orariogio">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
                 <div class="div-time" id = "ven">
                     <label  class="label3" id="timeStart">Ven:</label>
                     <select name="orarioven" class="input-dropdown-2" id="orarioven">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
                 <div class="div-time" id = "sab">
                     <label  class="label3" id="timeStart">Sab:</label>
                     <select name="orariosab" class="input-dropdown-2" id="orariosab">
                         <option value="" selected disabled hidden>Seleziona Orario</option>
-                        <option value="1">Da:  8:00 A:  9:30</option>
-                        <option value="2">Da:  9:30 A: 11:00</option>
-                        <option value="3">Da: 11:00 A: 12:30</option>
-                        <option value="4">Da: 12:30 A: 14:00</option>
-                        <option value="5">Da: 14:00 A: 15:30</option>
-                        <option value="6">Da: 15:30 A: 17:00</option>
+                        <option value="8:00:00">Da:  8:00 A:  9:30</option>
+                        <option value="9:30:00">Da:  9:30 A: 11:00</option>
+                        <option value="11:00:00">Da: 11:00 A: 12:30</option>
+                        <option value="12:30:00">Da: 12:30 A: 14:00</option>
+                        <option value="14:00:00">Da: 14:00 A: 15:30</option>
+                        <option value="15:30:00">Da: 15:30 A: 17:00</option>
                     </select>
                 </div>
 

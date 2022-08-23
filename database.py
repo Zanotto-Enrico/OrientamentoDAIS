@@ -6,7 +6,9 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum
-from datetime import date
+from datetime import *
+import random
+import string
 
 #-------------------------------------------------------------
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
@@ -57,9 +59,10 @@ class Lezioni(Base):
     __tablename__ = "lezioni"
     
     id_lezione = Column(Integer, primary_key = True)
+    data = Column(Date)
     secret_code = Column(String)
-    orario_inizio = Column(Date)
-    orario_fine = Column(Date)
+    orario_inizio = Column(Time)
+    orario_fine = Column(Time)
     id_corso = Column(Integer)
     
     def __repr__(self):
@@ -259,6 +262,56 @@ def check_user_login(username, password):
     
     return Return.FAILURE
 
+#---- Metodo che verifica la disponibilità di un aula di poter ospitare una lezione
+#     Ritorna False se l'aula è gia occupata in quella data e ora, True altrimenti
+def check_disponibilità_aula(id_aula, orari, dataInizio, dataFine):
+    collisioni = []
+    for dayofweek in range(1,7):
+        result = None
+        if(orari[dayofweek-1] != None):
+            result = session.query(Lezioni.id_lezione
+                   ).filter(and_(Lezioni.id_corso == Corsi.id_corso, Aule.id_aula == Corsi.id_aula, Aule.id_aula == id_aula)
+                   ).filter(Lezioni.orario_inizio == orari[dayofweek-1]
+                   ).filter(and_(Lezioni.data.between(dataInizio,dataFine))
+                   ).filter(func.extract('dow',Lezioni.data) == dayofweek).all()
+        if(result != None):
+            for item in result: 
+                collisioni.append(item[0])
+    return collisioni
+
+#---- Metodo per la creazione di un corso e per la generazione delle relative lezioni
+#     Ritorna la lista con data e ora delle lezioni che non possono essere create per via
+#     di mancata disponibilià dell'aula.   Se la lista è vuota il corso è stato creato
+def insert_new_corso(nome,descrizione,is_online,min_stud,max_stud,docente,id_aula,first_week,last_week, orari ):
+
+    orariFine = {"8:00:00":"9:30:00","9:30:00":"11:00:00","11:00:00":"12:30:00","12:30:00":"14:00:00","14:00:00":"15:30:00","15:30:00":"17:00:00"}
+    inizio = date.fromisocalendar(year=int(first_week.split('-')[0]),week=int(first_week.split('W')[1]),day=1)
+    fine = date.fromisocalendar(year=int(last_week.split('-')[0]),week=int(last_week.split('W')[1]),day=7)
+    
+    if(min_stud > max_stud or inizio > fine):
+        return None
+
+    # verifico che le aule siano libere prima di creare nuove lezioni
+    collisioni = check_disponibilità_aula(id_aula,orari, inizio.strftime("%m/%d/%Y"), fine.strftime("%m/%d/%Y") )
+    if(len(collisioni) > 0):
+        return collisioni
+
+    # creo il corso effettivo con le relative informazioni
+    new_corso = Corsi(nome=nome,descrizione=descrizione,is_online=is_online,min_partecipanti=min_stud,max_partecipanti=max_stud,docente=docente,id_aula=id_aula)
+    session.add(new_corso)
+    session.commit()
+    session.refresh(new_corso)
+
+    # scorro tutte le date scelte e creo le varie lezioni del corso
+    while(inizio <= fine):
+        if(orari[inizio.isoweekday()-1] != None):
+            new_lesson = Lezioni(id_corso=new_corso.id_corso,secret_code=get_random_string(10),data=inizio.strftime("%m/%d/%Y"),orario_inizio=orari[inizio.isoweekday()-1],orario_fine=orariFine[orari[inizio.isoweekday()-1]])
+            session.add(new_lesson)
+            session.commit()
+        inizio = inizio + timedelta(days = 1)
+    
+    return collisioni
+    
 # + - - - - - - - - - - +
 # | METODI DI SUPPORTO  |
 # + - - - - - - - - - - +
@@ -440,12 +493,27 @@ def get_info_utente(username):
         print("[!] - Errore nella restituzione delle informazioni relative all'utente con username: " + username + ", verificare il metodo get_info_utente(...)")
         print(e)
 
+#---- Metodo utilizato che restituisce una lista contenente le lezioni con le relative info
+#     necessita come parametro un'array con gli id delle lezioni richieste
+def get_info_lezioni(lezioni):
+    info = []
+    for id in lezioni:
+        info.append(session.query(Lezioni.data,Lezioni.orario_inizio,Lezioni.orario_fine).filter(Lezioni.id_lezione == id).all())
+    return info
+
+
+#---- Metodo utilizato per generare codici random, utile per creare le chiavi di
+#     conferma partecipazione delle lezioni
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return(result_str)
+
 def get_edifici_aule():
     res = {}
     for ed in session.query(Edifici.id_edificio, Edifici.nome).all():
         lista = []
-        for aula in session.query(Aule.nome).filter(Aule.id_edificio == ed[0]).all():
-            lista.append(aula[0])
+        for aula in session.query(Aule.id_aula,Aule.nome).filter(Aule.id_edificio == ed[0]).all():
+            lista.append((aula[0],aula[1]))
         res[ed[1]] = lista
-    print(res)
     return res
