@@ -99,6 +99,10 @@ body{
     margin: 0px;
 }
 
+.benvenuto{
+    background:url(/static/imgs/bottomred2.png) fixed center ;
+}
+
 .body
 {
     background-color:#f8f9fa;
@@ -780,4 +784,29 @@ td {
     text-align: center;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.benv-div{
+    text-align: center;
+    position: absolute;
+    top:100px;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+}
+
+.benv-div h1{
+    margin: 0;
+    padding: 20px;
+    padding-bottom: 40px;
+}
+
+.benv-div .imgtitle{
+    padding-top: 150px;
+    height: 45px;
+}
+
+.benv-div a{
+    padding: 20px;
+    color: #ac0033;
 }

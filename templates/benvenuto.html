@@ -6,5 +6,19 @@
 
 
 {% block contenuto %}
+<div class="benv-div">
+
+    <img src="{{url_for('static', filename='imgs/logored.png')}}" class="imgtitle" />
     <h1>Benvenuto {{user}}!</h1> 
+    <div>
+        <a href="listaCorsi"> Lista Corsi</a>
+        <a href="profilo"> Profilo</a>
+        {% if isProfessor==False %}
+        <a href="calendario"> Calendario </a>
+        {% else %}
+        <a href="profilo"> Crea Corso</a>
+        {% endif %}
+    </div>
+</div>    
+
 {% endblock %}

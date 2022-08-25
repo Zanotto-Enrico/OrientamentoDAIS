@@ -5,7 +5,11 @@
         {% block titolo %}          
         {% endblock %}
     </head>
-    <body>
+    {% if benvenuto==1 %}
+    <body class="benvenuto">
+    {% else %}
+    </body>
+    {% endif %}
         <header>
             <div class="header-container" >
                 <img src="{{url_for('static', filename='imgs/logo.png')}}" class="imgtitle" />

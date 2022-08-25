@@ -141,7 +141,7 @@ def register ():
 def benvenuto ():
 	if "user" in session:
 		user = session["user"]
-		return render_template("benvenuto.html", user=user, isProfessor=session["isProfessor"])
+		return render_template("benvenuto.html", user=user, isProfessor=session["isProfessor"], benvenuto=1)
 	else:
 		return redirect(url_for("login"))
 
