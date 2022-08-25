@@ -345,6 +345,12 @@ def get_iscritti(id_corso):
 def get_nlezioni(id_corso):
     return session.query(Lezioni).filter_by(id_corso = id_corso).count()
 
+#---- Metodo utile per restituire il numero di lezioni di un determinato corso
+#     in cui un utente ha dimostrato di aver preso parte
+def get_npartecipazioni(id_corso, username):
+    return session.query(Lezioni,PartecipazioniLezione).filter(and_(Lezioni.id_corso == id_corso, PartecipazioniLezione.username == username, 
+                                                                    PartecipazioniLezione.id_lezione == Lezioni.id_lezione)).count()
+
 #---- Metodo che, passato l'username dello studente, restituisce il numero di corsi ai quali
 #     appare iscritto
 def get_numeroiscrizioni(username):
@@ -357,6 +363,12 @@ def check_iscrizione(id_Corso, id_Studente):
     if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)).first() != None):
         return True
     return False
+
+#---- Metodo che, passato l'username dello studente e l'id di un corso restituisce True
+#     se l'utente ha partecipato a tutte le lezioni, Falso altrimenti
+def has_user_completed_course(id_corso, username):
+    return get_nlezioni(id_corso) == get_npartecipazioni(id_corso,username)
+
 
 def gestione_iscriz(id_corso, username, tipo):
     if(tipo == "I"):   
@@ -393,7 +405,9 @@ def get_info_corso(id_corso):
         # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
         # l'id richiesto
         corso = session.query(Corsi).filter_by(id_corso = str(id_corso)).first()
+        prof = session.query(Utenti).filter(Utenti.username == corso.docente).first()
         print (corso)
+        print(prof)
         
         struttura = get_struttura(id_aula=int(corso.id_aula))
         
@@ -413,7 +427,7 @@ def get_info_corso(id_corso):
                 "postimin": corso.min_partecipanti,
                 "postimax": corso.max_partecipanti,
                 "iscritti": get_iscritti(id_corso=corso.id_corso),
-                "prof": corso.docente,
+                "prof": prof.nome + " " + prof.cognome,
                 "descrizione": corso.descrizione,
                 "inizio": "15/05/2022"}
     except Exception as e:
@@ -423,13 +437,17 @@ def get_info_corso(id_corso):
 
 #---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
 #     rappresentare in maniera minimal le informazioni di un corso
-def get_lista_corsi():
+def get_lista_corsi(prof):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
     
     # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
-    # l'id richiesto
-    corsi = list(session.query(Corsi).all())
+    # il professore se richiesto
+    corsi = None
+    if(prof == None):
+        corsi = list(session.query(Corsi).all())
+    else:
+        corsi = list(session.query(Corsi).filter(Corsi.docente==prof).all())
     
     # creo la lista di dizionari
     infos = []

@@ -71,6 +71,15 @@ class JavaScriptServer:
 	def togglePopup(self,id):
 		self.js.document.getElementById(id).style.display = "none"
 
+	def setIdCorso(self, id_corso):
+		self.id_corso = id_corso
+
+	def downloadList(self):
+		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare i codici
+	
+	def downloadCert(self):
+		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare il certificato
+
 
 #---------- LOG FILES
 
@@ -149,7 +158,7 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET','POST'])
 def listaCorsi ():
 	if "user" in session:
-		listaDiDiz = get_lista_corsi()
+		listaDiDiz = get_lista_corsi(None)
 		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -191,7 +200,8 @@ def creaCorso ():
 @app.route ('/gestisciCorsi', methods=['GET','POST'])
 def gestisciCorsi ():
 	if "user" in session and session["isProfessor"] == True:
-		return render_template("gestisciCorsi.html")
+		listaDiDiz = get_lista_corsi(session["user"])
+		return render_template("gestisciCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
 
@@ -251,14 +261,19 @@ def infoCorso ():
 				iscritto = False
 			else:
 				result = "annullamento-fallito"
+		
+		certificato = has_user_completed_course(session["idCorso"], session["user"])
+		
+		pagina = JavaScriptServer
+		pagina.setIdCorso(session["idCorso"])
 
 		if session["idCorso"] != None:
-			# ric/infoCorsohiedo le informazioni relative al corso da analizzare tramite opportuno metodo
+			#/infoCorso richiedo le informazioni relative al corso da analizzare tramite opportuno metodo
 			diz = get_info_corso(id_corso = session["idCorso"])
 			
-			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto)
+			return pagina.render(render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto, certificato=certificato))
 		else:
-			return render_template("listaCorsi.html", isProfessor=session["isProfessor"])
+			return redirect(url_for("listaCorsi"))
 	else:
 		return redirect(url_for("login"))
 
@@ -270,10 +285,12 @@ def gestisciCorso ():
 
 		if session["idCorso"] != None:
 			diz = get_info_corso(id_corso = session["idCorso"])
+			pagina = JavaScriptServer
+			pagina.setIdCorso(session["idCorso"])
 			
-			return render_template("gestisciCorso.html", info=diz, isProfessor=session["isProfessor"])
+			return pagina.render(render_template("gestisciCorso.html", info=diz, isProfessor=session["isProfessor"]))
 		else:
-			return render_template("gestisciCorsi.html", isProfessor=session["isProfessor"])
+			return redirect(url_for("gestisciCorsi"))
 	else:
 		return redirect(url_for("login"))
 
@@ -291,19 +308,6 @@ def eliminaCorso ():
 	else:
 		return redirect(url_for("login"))
 
-#Carica la pagina di gestione di un preciso corso
-@app.route ('/modCorso', methods=['POST'])
-def modificaCorso ():
-	if "user" in session:
-
-		if session["idCorso"] != None:
-			diz = get_info_corso(id_corso = session["idCorso"])
-			
-			return render_template("modCorso.html", info=diz, isProfessor=session["isProfessor"])
-		else:
-			return redirect(url_for("gestisciCorsi"))
-	else:
-		return redirect(url_for("login"))
 
 #Carica la pagina con la lista degli iscritti al corso
 @app.route ('/listaIscritti', methods=['GET','POST'])

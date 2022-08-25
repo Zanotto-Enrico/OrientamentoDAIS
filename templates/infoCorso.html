@@ -36,6 +36,9 @@
                     <button type="submit" class="btn-iscriviti" name="annulla" value=1>Annulla iscrizione</button>
                 </form>
             {%endif%} 
+            {%if certificato==True%}
+                <button type="submit" class="btn-iscriviti" name="certificato" onclick="server.downloadCert()" value=1>Scarica Certificato</button>
+            {%endif%} 
 
             
 

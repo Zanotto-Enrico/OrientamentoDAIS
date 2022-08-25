@@ -30,35 +30,21 @@
             </tr>
         </thead>
         <tbody>
+            {% for corso in info %}
             <tr>
-                <td> In Presenza </td>
-                <td> Centro Studi sulle Arti della Russia </td>
-                <td> Organizzazione di eventi culturali 
-                     L'arte ai giovani! Incontriamo l'arte russa </td>
-                <td> 12 lezioni </td>
-                <td> aperte </td>
-                <td> 80/110 </td>
+                <td> {{ corso.modalita }} </td>
+                <td> {{ corso.struttura }} </td>
+                <td> {{ corso.nome }} </td>
+                <td> {{ corso.durata }} </td>
+                <td> {{ corso.iscrizioni }} </td>
+                <td> {{ corso.iscritti}}/{{corso.postimax }} </td>
                 <td>
                     <form method='POST' action='gestisciCorso'> 
-                    <button class="btnModCorso" name="idCorso" value=0>Gestisci</button> 
+                    <button class="btnModCorso" name="idCorso" value={{corso.id}}>Gestisci</button> 
                     </form>
                 </td>
             </tr>
-            <tr>
-                <td> Online </td>
-                <td> Dipartimento di Scienze Ambientali </td>
-                <td> Laboratorio di Intelligenza Artificaiale
-                     avanzata: Regressione lineare e adversarial machine
-                     learning </td>
-                <td> 5 lezioni </td>
-                <td> chiuse </td>
-                <td> 30/30 </td>
-                <td>                        
-                    <form method='POST' action='gestisciCorso'> 
-                        <button class="btnModCorso" name="idCorso" value=0>Gestisci</button> 
-                    </form>
-                </td>
-            </tr>
+            {%endfor%}
         </tbody>
     </table>
 </div>
