@@ -52,19 +52,20 @@ FOREIGN KEY (id_aula) REFERENCES Aule(id_aula)
 
 create table Lezioni(
 id_lezione SERIAL PRIMARY KEY,
+data DATE NOT NULL,
 secret_code VARCHAR(32) NOT NULL,
 orario_inizio TIME NOT NULL,
 orario_fine TIME NOT NULL,
 id_corso INTEGER NOT NULL,
-FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso)
+FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso) ON DELETE CASCADE
 );
 
 create table IscrizioniCorsi(
 id_corso SERIAL NOT NULL,
 username VARCHAR(50) NOT NULL,
 PRIMARY KEY (id_corso,username),
-FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso),
-FOREIGN KEY (username) REFERENCES Partecipanti(username)
+FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso) ON DELETE CASCADE,
+FOREIGN KEY (username) REFERENCES Partecipanti(username) ON DELETE CASCADE
 );
 
 
