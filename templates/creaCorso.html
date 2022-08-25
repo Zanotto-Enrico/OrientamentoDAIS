@@ -34,8 +34,22 @@ Il: {{item[0][0]}} Dalle: {{item[0][1]}} Alle: {{item[0][2]}}
         <div class="content">
             <div class="close-btn" onclick="server.togglePopup('popup2')">&times;</div>
             <h2>Attenzione</h2>
-            <p> Non è stato possibile creare il corso poichè le informazioni inserite risultano essere incorrette o incomplete</p>
+            <p> Non è stato possibile creare il corso poichè le informazioni inserite risultano essere incorrette o incomplete.</p>
             <div class="ok-btn" onclick="server.togglePopup('popup2')">ok</div>
+        </div>
+    </div>
+
+    {% if riuscito == 1 %}
+    <div id = "popup3" class="popup2" style="display: block;">
+    {% else %}
+    <div id = "popup3" class="popup2" style="display: none;">
+    {% endif %}
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="server.togglePopup('popup3')">&times;</div>
+            <h2>Attenzione</h2>
+            <p> Corso creato correttamente!<br> Entra nella pagina gestione corsi per gestire e tenere traccia dello stato del tuo corso.</p>
+            <div class="ok-btn" onclick="server.togglePopup('popup3')">ok</div>
         </div>
     </div>
 

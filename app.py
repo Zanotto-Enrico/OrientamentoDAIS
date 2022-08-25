@@ -175,13 +175,14 @@ def creaCorso ():
 						last_week = request.form.get("lastWeek"),
 						orari = [request.form.get("orariolun"),request.form.get("orariomar"),request.form.get("orariomer"),
 								request.form.get("orariogio"),request.form.get("orarioven"),request.form.get("orariosab"),None])
-
-		if(collisioni == None):
-			return pagina.render(render_template("creaCorso.html",diz=diz,errore=1))
-		elif(len(collisioni) > 0):
-			return pagina.render(render_template("creaCorso.html",diz=diz,collisioni = get_info_lezioni(lezioni=collisioni), errore=0))
+			if(collisioni == None):
+				return pagina.render(render_template("creaCorso.html",diz=diz,errore=1,riusito=0))
+			elif(len(collisioni) > 0):
+				return pagina.render(render_template("creaCorso.html",diz=diz,collisioni = get_info_lezioni(lezioni=collisioni), errore=0,riusito=0))
+			else:
+				return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riuscito=1))
 		else:
-			return pagina.render(render_template("creaCorso.html", diz=diz, errore=0))
+			return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riusito=0))
 
 	else:
 		return redirect(url_for("login"))

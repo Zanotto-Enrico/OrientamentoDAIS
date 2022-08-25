@@ -297,7 +297,17 @@ input::-webkit-input-placeholder {
   .divcheck{
     width: 50%;
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 17.2px;
     padding-right: 37.5%;
-    padding-left: 12.5%;
+    padding-left: 11.99%;
+  }
+
+  h3{
+    font-family: "OpenSans-Bold";
+    font-size: 18px;
+  }
+
+  label{
+    font-family: "OpenSans-Bold";
+    font-size: 18px;
   }

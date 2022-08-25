@@ -285,10 +285,10 @@ def check_disponibilità_aula(id_aula, orari, dataInizio, dataFine):
 def insert_new_corso(nome,descrizione,is_online,min_stud,max_stud,docente,id_aula,first_week,last_week, orari ):
 
     orariFine = {"8:00:00":"9:30:00","9:30:00":"11:00:00","11:00:00":"12:30:00","12:30:00":"14:00:00","14:00:00":"15:30:00","15:30:00":"17:00:00"}
-    inizio = date.fromisocalendar(year=int(first_week.split('-')[0]),week=int(first_week.split('W')[1]),day=1)
-    fine = date.fromisocalendar(year=int(last_week.split('-')[0]),week=int(last_week.split('W')[1]),day=7)
+    inizio = datetime.fromisocalendar(year=int(first_week.split('-')[0]),week=int(first_week.split('W')[1]),day=1)
+    fine = datetime.fromisocalendar(year=int(last_week.split('-')[0]),week=int(last_week.split('W')[1]),day=7)
     
-    if(min_stud > max_stud or inizio > fine):
+    if(int(min_stud) > int(max_stud) or (fine - inizio).total_seconds() < 0):
         return None
 
     # verifico che le aule siano libere prima di creare nuove lezioni
