@@ -13,8 +13,8 @@ import string
 #-------------------------------------------------------------
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
-# modificare queste due variabili
-address = "orientamentodais.com"
+# modificare il contenuto di queste due variabili
+address = "127.0.0.1:5432"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -160,7 +160,7 @@ def initialize_db (user):
               "      Vedi metodo initialize_db(...)")
         return False
 
-
+#---- CANCELLARE ----
 def dump ():
     initialize_db('admin')
     l = list()
@@ -219,9 +219,9 @@ def insert_new_user(username, nome, cognome, email, data_nascita, password, is_p
                 session.commit()
             except:
                 print("[!] - Errore nella creazione dell'utente specializzato partecipante\n" +
-                        "      Vedi metodo insert_new_user(...)")
+                      "      Vedi metodo insert_new_user(...)")
                 ret = False
-            
+
         # se non ho inserito correttamente il tipo specializzato faccio un rollback anche 
         # del commit dell'utente generico precedentemente inserito nella tabella utenti
         if (ret == False):
@@ -231,8 +231,9 @@ def insert_new_user(username, nome, cognome, email, data_nascita, password, is_p
         return Return.SUCCESS
     except Exception as e:
         print("[!] - Utente già presente nella base di dati o errore nell'inserimento!\n" +
-              "      Vedi metodo insert_new_user()" +
-              "      Per maggiori info:\n" + e)
+              "      Vedi metodo insert_new_user()\n" +
+              "      Per maggiori info:\n")
+        print(e)
         return Return.FAILURE
     
 
@@ -282,11 +283,14 @@ def check_disponibilità_aula(id_aula, orari, dataInizio, dataFine):
 #---- Metodo per la creazione di un corso e per la generazione delle relative lezioni
 #     Ritorna la lista con data e ora delle lezioni che non possono essere create per via
 #     di mancata disponibilià dell'aula.   Se la lista è vuota il corso è stato creato
-def insert_new_corso(nome,descrizione,is_online,min_stud,max_stud,docente,id_aula,first_week,last_week, orari ):
+def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, id_aula, first_week, last_week, orari ):
 
     orariFine = {"8:00:00":"9:30:00","9:30:00":"11:00:00","11:00:00":"12:30:00","12:30:00":"14:00:00","14:00:00":"15:30:00","15:30:00":"17:00:00"}
     inizio = datetime.fromisocalendar(year=int(first_week.split('-')[0]),week=int(first_week.split('W')[1]),day=1)
     fine = datetime.fromisocalendar(year=int(last_week.split('-')[0]),week=int(last_week.split('W')[1]),day=7)
+    
+    print(inizio)
+    print(fine)
     
     if(int(min_stud) > int(max_stud) or (fine - inizio).total_seconds() < 0):
         return None
@@ -305,17 +309,17 @@ def insert_new_corso(nome,descrizione,is_online,min_stud,max_stud,docente,id_aul
     # scorro tutte le date scelte e creo le varie lezioni del corso
     while(inizio <= fine):
         if(orari[inizio.isoweekday()-1] != None):
-            new_lesson = Lezioni(id_corso=new_corso.id_corso,secret_code=get_random_string(10),data=inizio.strftime("%m/%d/%Y"),orario_inizio=orari[inizio.isoweekday()-1],orario_fine=orariFine[orari[inizio.isoweekday()-1]])
+            new_lesson = Lezioni(id_corso=new_corso.id_corso,secret_code=get_random_string(10),data=inizio.strftime("%d/%m/%Y"),orario_inizio=orari[inizio.isoweekday()-1],orario_fine=orariFine[orari[inizio.isoweekday()-1]])
             session.add(new_lesson)
             session.commit()
         inizio = inizio + timedelta(days = 1)
     
     return collisioni
-    
+
+
 # + - - - - - - - - - - +
 # | METODI DI SUPPORTO  |
 # + - - - - - - - - - - +
-
 
 #---- Metodo utile per verificare se un certo username, e quindi utente, del sito sia registrato
 #     come docente o meno restituendone il risultato della verifica
@@ -356,8 +360,10 @@ def get_npartecipazioni(id_corso, username):
 def get_numeroiscrizioni(username):
     return session.query(IscrizioniCorsi).filter_by(username = username).count()
 
+#---- Metodo che, dato un professore, restituisce il numero di corsi da lui tenuti
 def get_corsitenuti(prof):
     return session.query(Corsi).filter_by(docente = prof).count()
+
 
 def check_iscrizione(id_Corso, id_Studente):
     if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)).first() != None):
@@ -369,22 +375,30 @@ def check_iscrizione(id_Corso, id_Studente):
 def has_user_completed_course(id_corso, username):
     return get_nlezioni(id_corso) == get_npartecipazioni(id_corso,username)
 
-
+#---- Metodo avente il compito di aggiungere una iscrizione ad un corso (corsoidentificato 
+#     da id_corso e utente da username) se il valore contenuto nella variabile tipo è uguale 
+#     a 'I'. Rimuove invece l'iscrizione se il contenuto della variabile tipo è 'A'
 def gestione_iscriz(id_corso, username, tipo):
     if(tipo == "I"):   
         try:
-            result = IscrizioniCorsi(id_corso = id_corso,username = username)
+            result = IscrizioniCorsi(id_corso = id_corso, username = username)
             session.add(result)
+            # rendo subito effettive le modifiche sulla base di dati tramite un commit
             session.commit()
             res = True
-        except:
+        except Exception as e:
+            print("[!] - Errore nell'operazione!\n      Di seguito per maggiori informazioni:\n")
+            print(e)
             res = False
     if(tipo == "A"):
         try:
             result = session.query(IscrizioniCorsi).filter_by(id_corso = id_corso, username = username).delete()
+            # rendo subito effettive le modifiche sulla base di dati tramite un commit
             session.commit()
             res = True
-        except:
+        except Exception as e:
+            print("[!] - Errore nell'operazione!\n      Di seguito per maggiori informazioni:\n")
+            print(e)
             res = False
     
     return res
@@ -527,11 +541,19 @@ def get_random_string(length):
     result_str = ''.join(random.choice(letters) for i in range(length))
     return(result_str)
 
+#---- Metodo avente il compito di restituire un dizionario contenente per ogni edificio (chiave
+#     del dizionario stesso) la lista delle aule (id e nome) ad esso appartenenti
 def get_edifici_aule():
     res = {}
+    # scorro tutti gli edifici presenti
     for ed in session.query(Edifici.id_edificio, Edifici.nome).all():
         lista = []
-        for aula in session.query(Aule.id_aula,Aule.nome).filter(Aule.id_edificio == ed[0]).all():
+        # scorro tutte le aule per tale edificio
+        for aula in session.query(Aule.id_aula, Aule.nome).filter(Aule.id_edificio == ed[0]).all():
+            # aggiungo una ad una tutte le classi, con relativo id e nome, alla lista
             lista.append((aula[0],aula[1]))
+        
+        # salvo nel dizionario nella posizione data dal nome dell'edificio la lista 
+        # contenente tutte le aule
         res[ed[1]] = lista
     return res
