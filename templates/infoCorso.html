@@ -37,7 +37,10 @@
                 </form>
             {%endif%} 
             {%if certificato==True%}
-                <button type="submit" class="btn-iscriviti" name="certificato" onclick="server.downloadCert()" value=1>Scarica Certificato</button>
+                    
+                <form method='POST' action='certificato'> 
+                    <button type="submit" class="btn-iscriviti" name="certificato" value=1>Scarica Certificato</button>
+                </form>
             {%endif%} 
 
             

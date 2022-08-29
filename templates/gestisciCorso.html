@@ -36,9 +36,9 @@
                 <h4>Descrizione: </h4>{{info["descrizione"]}}<br>
              </div>
             <div class="btnModifiche">
-
-                    <button type="submit" class="btnsGestione" onclick="server.downloadList()">Ottieni chiavi</button>
-
+                <form method='POST' action='chiavi'> 
+                    <button type="submit" class="btnsGestione" >Ottieni chiavi</button>
+                </form>
                 <form method='POST' action='eliminaCorso'> 
                     <button type="submit" class="btnsGestione">Elimina</button>
                 </form>

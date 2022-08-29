@@ -1,3 +1,4 @@
+from crypt import methods
 from distutils.log import info
 from locale import delocalize
 import logging
@@ -75,10 +76,13 @@ class JavaScriptServer:
 		self.id_corso = id_corso
 
 	def downloadList(self):
-		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare i codici
+		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare il certificato
+
 	
 	def downloadCert(self):
-		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare il certificato
+		session["attestato"] = get_attestatocorso(id_utente=session["user"],id_corso=self.id_corso)
+		return redirect(url_for("login"))
+
 
 
 #---------- LOG FILES
@@ -158,7 +162,10 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET','POST'])
 def listaCorsi ():
 	if "user" in session:
-		listaDiDiz = get_lista_corsi(None)
+		if(request.method == 'POST'):
+			listaDiDiz = get_lista_corsi(None,request.form.get("filter"))
+		else:
+			listaDiDiz = get_lista_corsi(None,None)
 		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -200,7 +207,7 @@ def creaCorso ():
 @app.route ('/gestisciCorsi', methods=['GET','POST'])
 def gestisciCorsi ():
 	if "user" in session and session["isProfessor"] == True:
-		listaDiDiz = get_lista_corsi(session["user"])
+		listaDiDiz = get_lista_corsi(session["user"],None)
 		return render_template("gestisciCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -263,15 +270,12 @@ def infoCorso ():
 				result = "annullamento-fallito"
 		
 		certificato = has_user_completed_course(session["idCorso"], session["user"])
-		
-		pagina = JavaScriptServer
-		pagina.setIdCorso(session["idCorso"])
 
 		if session["idCorso"] != None:
 			#/infoCorso richiedo le informazioni relative al corso da analizzare tramite opportuno metodo
 			diz = get_info_corso(id_corso = session["idCorso"])
 			
-			return pagina.render(render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto, certificato=certificato))
+			return render_template("infoCorso.html", info=diz, isProfessor=session["isProfessor"], result=result, iscritto=iscritto, certificato=certificato)
 		else:
 			return redirect(url_for("listaCorsi"))
 	else:
@@ -333,3 +337,24 @@ def profilo ():
 		return render_template("profilo.html", isProfessor=session["isProfessor"], info=diz)
 	else:
 		return redirect(url_for("login"))
+
+#Carica la pagina dove viene generato il pd del certificato
+@app.route('/certificato', methods=['GET','POST'])
+def certificato():
+	if "user" in session:
+		pdf =  get_attestatocorso(id_utente=session["user"],id_corso=session["idCorso"])
+		response = response = make_response(pdf.output(dest='S').encode('latin-1'))
+		response.headers['Content-Type'] = 'application/pdf'
+		response.headers['Content-Disposition'] = 'inline; filename=certificato.pdf'
+	return response
+
+#Carica la pagina dove viene generato il pdf con le chiavi dei corsi
+@app.route('/chiavi', methods=['GET','POST'])
+def chiavi():
+	if "user" in session:
+		pdf =  None #qua va messa la funzione che ritorna il pdf con le chiavi (l'id corso è salvato in session)
+		response = response = make_response(pdf.output(dest='S').encode('latin-1'))
+		response.headers['Content-Type'] = 'application/pdf'
+		response.headers['Content-Disposition'] = 'inline; filename=chiavi.pdf'
+	return response
+

@@ -1,6 +1,7 @@
 from cmath import cos
 from gettext import install
 from fpdf import FPDF
+from flask import make_response
 import hashlib
 import sqlalchemy
 from sqlalchemy import *
@@ -15,7 +16,7 @@ import string
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
 # modificare il contenuto di queste due variabili
-address = "127.0.0.1:5432"#"orientamentodais.com"
+address = "orientamentodais.com"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -125,7 +126,6 @@ class Corsi(Base):
     nome = Column(String)
     descrizione = Column(String)
     is_online = Column(Boolean)
-    stato_iscrizioni = Column(Boolean)
     min_partecipanti = Column(Integer)
     max_partecipanti = Column(Integer)
     docente = Column(String)
@@ -315,18 +315,28 @@ def get_attestatocorso(id_utente, id_corso):
             pdf = FPDF()
             pdf.add_page()
             pdf.set_author("Università Ca' Foscari - Venezia")
-            pdf.set_font("Arial", size = 15)
             pdf.set_title("Attestato di partecipazione")
             
             corso = get_info_corso(id_corso=id_corso)
             utente = get_info_utente(username=id_utente)
-            pdf.cell(180, 10, txt = ("Si attesta che lo studente %s ha partecipato al corso %s del professor %s" % (utente["nome"] + utente["cognome"], corso["nome"], corso["prof"])))
+            pdf.set_font("Arial", size = 26)
+            pdf.cell(180,40,'',align='C',ln=1)
+            pdf.cell(188,20,'Attestato di partecipazione',align='C',ln=1)
+            pdf.set_font("Arial", size = 14)
+            pdf.cell(188,20,'Università Ca\' Foscari',align='C',ln=1)
+            pdf.cell(180,10,'',align='C',ln=1)
+            pdf.set_font("Arial", size = 19)
+            pdf.cell(180, 10, txt = ("Si attesta che lo studente %s" % (utente["nome"] + utente["cognome"])),align='C',ln=1)
+            pdf.cell(180, 10, txt = ("ha partecipato al corso %s" % ( corso["nome"])),align='C',ln=1)
+            pdf.cell(180, 10, txt = ("tenuto dal professor %s" % ( corso["prof"])),align='C',ln=1)
+            pdf.cell(180,20,'',align='C',ln=1)
+            pdf.set_font("Arial", size = 17)
+            pdf.cell(180, 10, txt="Di seguito una breve descrizione del corso seguito:", ln=1,align='C')
+            pdf.cell(180, 10, txt=corso["descrizione"], ln=1,align='C')
+            pdf.cell(180,20,'',align='C',ln=1)
+            pdf.image("static/imgs/unive.png",x=80)
             
-            pdf.cell(160, 10, txt="Di seguito una breve descrizione del corso seguito:", ln=1)
-            pdf.cell(150, 10, txt=corso.descrizione, ln=1)
-            
-            pdf.output("partecipazione.pdf")
-            return True
+            return pdf
         except Exception as e:
             print("[!] - Errore nella generazione del file PDF\n      Per maggiori info:\n")
             print(e)
@@ -486,18 +496,21 @@ def get_info_corso(id_corso):
 
 #---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
 #     rappresentare in maniera minimal le informazioni di un corso
-def get_lista_corsi(prof):
+def get_lista_corsi(prof,filter):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
     
     # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
     # il professore se richiesto
-    corsi = None
-    if(prof == None):
-        corsi = list(session.query(Corsi).all())
-    else:
-        corsi = list(session.query(Corsi).filter(Corsi.docente==prof).all())
     
+    query = session.query(Corsi);
+    if(prof != None):
+        query = query.filter(Corsi.docente==prof)
+    if(filter != None):
+        query = query.filter(Corsi.nome.like("%"+filter+"%"))
+    
+    corsi = list(query.all())
+
     # creo la lista di dizionari
     infos = []
     for c in corsi:
