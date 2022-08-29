@@ -1,5 +1,6 @@
 from cmath import cos
 from gettext import install
+from fpdf import FPDF
 import hashlib
 import sqlalchemy
 from sqlalchemy import *
@@ -124,6 +125,7 @@ class Corsi(Base):
     nome = Column(String)
     descrizione = Column(String)
     is_online = Column(Boolean)
+    stato_iscrizioni = Column(Boolean)
     min_partecipanti = Column(Integer)
     max_partecipanti = Column(Integer)
     docente = Column(String)
@@ -300,6 +302,39 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
     
     return collisioni
 
+#---- Metodo utile per generare il pdf relativo all'attestato di partecipazione al corso identificato
+#     da id_corso per l'utente identificato da id_utente. Il certificato può essere rilasciato però
+#     solo se lo studente ha partecipato 
+def get_attestatocorso(id_utente, id_corso):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
+    
+    # il certificato può essere rilasciato solo se lo studente ha completato il corso in questione
+    if has_user_completed_course(id_corso=id_corso, username=id_utente):
+        try:
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_author("Università Ca' Foscari - Venezia")
+            pdf.set_font("Arial", size = 15)
+            pdf.set_title("Attestato di partecipazione")
+            
+            corso = get_info_corso(id_corso=id_corso)
+            utente = get_info_utente(username=id_utente)
+            pdf.cell(180, 10, txt = ("Si attesta che lo studente %s ha partecipato al corso %s del professor %s" % (utente["nome"] + utente["cognome"], corso["nome"], corso["prof"])))
+            
+            pdf.cell(160, 10, txt="Di seguito una breve descrizione del corso seguito:", ln=1)
+            pdf.cell(150, 10, txt=corso.descrizione, ln=1)
+            
+            pdf.output("partecipazione.pdf")
+            return True
+        except Exception as e:
+            print("[!] - Errore nella generazione del file PDF\n      Per maggiori info:\n")
+            print(e)
+            
+        return False
+    
+    
+
 # + - - - - - - - - - - +
 # | METODI DI SUPPORTO  |
 # + - - - - - - - - - - +
@@ -354,7 +389,7 @@ def check_iscrizione(id_Corso, id_Studente):
     return False
 
 #---- Metodo che, passato l'username dello studente e l'id di un corso restituisce True
-#     se l'utente ha partecipato a tutte le lezioni, Falso altrimenti
+#     se l'utente ha partecipato a tutte le lezioni, False altrimenti
 def has_user_completed_course(id_corso, username):
     return get_nlezioni(id_corso) == get_npartecipazioni(id_corso,username)
 
