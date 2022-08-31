@@ -338,7 +338,7 @@ def profilo ():
 	else:
 		return redirect(url_for("login"))
 
-#Carica la pagina dove viene generato il pd del certificato
+#Carica la pagina dove viene generato il pdf del certificato
 @app.route('/certificato', methods=['GET','POST'])
 def certificato():
 	if "user" in session:
@@ -348,13 +348,22 @@ def certificato():
 		response.headers['Content-Disposition'] = 'inline; filename=certificato.pdf'
 	return response
 
-#Carica la pagina dove viene generato il pdf con le chiavi dei corsi
+#Carica la pagina dove viene generato il pdf con le chiavi delle lezioni di un certo corso
 @app.route('/chiavi', methods=['GET','POST'])
 def chiavi():
 	if "user" in session:
-		pdf =  None #qua va messa la funzione che ritorna il pdf con le chiavi (l'id corso è salvato in session)
+		pdf =  get_pdfchiavi(session["idCorso"])
 		response = response = make_response(pdf.output(dest='S').encode('latin-1'))
 		response.headers['Content-Type'] = 'application/pdf'
 		response.headers['Content-Disposition'] = 'inline; filename=chiavi.pdf'
-	return response
+		return response
 
+@app.route('/test', methods=['GET','POST'])
+def test():
+    session["idCorso"] = 1
+    print(session["idCorso"])
+    pdf = get_pdfchiavi(session["idCorso"])
+    response = make_response(pdf.output(dest='S').encode('latin-1'))
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=chiavi.pdf'
+    return response

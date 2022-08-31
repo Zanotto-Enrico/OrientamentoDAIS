@@ -16,7 +16,7 @@ import string
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
 # modificare il contenuto di queste due variabili
-address = "orientamentodais.com"#"orientamentodais.com"
+address = "127.0.0.1:5432"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -302,6 +302,41 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
     
     return collisioni
 
+#---- Metodo utile per generare un pdf contenente tutte le chiavi relative alle lezioni di un
+#     determinato corso, identificato mediante il parametro idcorso
+def get_pdfchiavi(idcorso):
+    
+    try:
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_author("Università Ca' Foscari - Venezia")
+        pdf.set_title("Chiavi delle lezioni")
+        
+        pdf.set_font("Arial", size = 26)
+        corso = get_info_corso(id_corso=str(idcorso))
+        pdf.cell(188,20,'%s' % (str(corso["nome"])),align='C',ln=1)
+        pdf.cell(180,10,' ',align='C',ln=1)
+        pdf.set_font("Arial", size = 12)
+        pdf.cell(180, 10, txt=corso["descrizione"], align='C', ln = 1)
+        pdf.cell(180, 10, txt='Di seguito le chiavi delle lezioni:', align='L', ln = 1)
+        
+        # scorro tutte le lezioni di un certo corso e ne aggiungo il relativo codice segreto
+        # al pdf
+        i = 0
+        for l in session.query(Lezioni).filter_by(id_corso = idcorso).all():
+            pdf.cell(180, 10, txt='   -  Lezione %s: %s' % (str(i), l.secret_code), align='L', ln=1)
+            i += 1
+        pdf.cell(180, 40, txt = ' ', ln = 1)
+        pdf.image("static/imgs/unive.png",x=80)
+            
+        return pdf
+        
+    except Exception as e:
+        print("[!] - Errore nella generazione del pdf con i codici delle lezioni. Per maggiori info:")
+        print(e)
+        
+    
+
 #---- Metodo utile per generare il pdf relativo all'attestato di partecipazione al corso identificato
 #     da id_corso per l'utente identificato da id_utente. Il certificato può essere rilasciato però
 #     solo se lo studente ha partecipato 
@@ -458,15 +493,12 @@ def check_disponibilita_aula(id_aula, orari, dataInizio, dataFine):
 def get_info_corso(id_corso):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
-    print("\n\n" + id_corso + "\n\n")
     
     try:
         # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
         # l'id richiesto
         corso = session.query(Corsi).filter_by(id_corso = str(id_corso)).first()
         prof = session.query(Utenti).filter(Utenti.username == corso.docente).first()
-        print (corso)
-        print(prof)
         
         struttura = get_struttura(id_aula=int(corso.id_aula))
         
