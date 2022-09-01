@@ -288,6 +288,8 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
         return collisioni
 
     # creo il corso effettivo con le relative informazioni e lo aggiungo alla base di dati
+    print("--------------------")
+    print(is_online)
     new_corso = Corsi(nome=nome, descrizione=descrizione, is_online=is_online, min_partecipanti=min_stud, max_partecipanti=max_stud, docente=docente, id_aula=id_aula)
     session.add(new_corso)
     session.commit()
@@ -554,9 +556,9 @@ def get_lista_corsi(prof,filter):
         info["struttura"] = struttura.nome + " - " + struttura.indirizzo
         
         if c.is_online == True:
-            info["modalita"] = "In Presenza"
-        else:
             info["modalita"] = "Online"
+        else:
+            info["modalita"] = "In Presenza"
         
         info["durata"] = str(get_nlezioni(id_corso=c.id_corso)) + " lezioni"
         
