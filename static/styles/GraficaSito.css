@@ -810,3 +810,8 @@ td {
     padding: 20px;
     color: #ac0033;
 }
+
+a {
+    font-family: "OpenSans-Bold";
+    font-size: 18px;
+  }

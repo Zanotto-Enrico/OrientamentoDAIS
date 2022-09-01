@@ -26,22 +26,24 @@
             <h4>Inizio lezioni: </h4>{{info["inizio"]}}<br>
             <h4>Descrizione: </h4>{{info["descrizione"]}}<br>
 
-            {%if iscritto==False%}
-                <form method='POST' action='infoCorso'> 
-                    <button type="submit" class="btn-iscriviti" name="iscrivimi" value=1>Iscriviti</button>
-                </form>
-            {%endif%} 
-            {%if iscritto==True%}
-                <form method='POST' action='infoCorso'> 
-                    <button type="submit" class="btn-iscriviti" name="annulla" value=1>Annulla iscrizione</button>
-                </form>
-            {%endif%} 
-            {%if certificato==True%}
-                    
-                <form method='POST' action='certificato'> 
-                    <button type="submit" class="btn-iscriviti" name="certificato" value=1>Scarica Certificato</button>
-                </form>
-            {%endif%} 
+            {% if isProfessor==False %}
+                {%if iscritto==False%}
+                    <form method='POST' action='infoCorso'> 
+                        <button type="submit" class="btn-iscriviti" name="iscrivimi" value=1>Iscriviti</button>
+                    </form>
+                {%endif%} 
+                {%if iscritto==True%}
+                    <form method='POST' action='infoCorso'> 
+                        <button type="submit" class="btn-iscriviti" name="annulla" value=1>Annulla iscrizione</button>
+                    </form>
+                {%endif%} 
+                {%if certificato==True%}
+                        
+                    <form method='POST' action='certificato'> 
+                        <button type="submit" class="btn-iscriviti" name="certificato" value=1>Scarica Certificato</button>
+                    </form>
+                {%endif%} 
+            {% endif %}
 
             
 
