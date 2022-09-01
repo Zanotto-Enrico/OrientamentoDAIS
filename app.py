@@ -219,7 +219,7 @@ def logout():
 	return redirect(url_for("login"))
 
 #Carica la pagina con la pagina con il calendario delle lezioni
-@app.route ('/calendario', methods=['GET'])
+@app.route ('/calendario', methods=['GET','POST'])
 def calendario ():
 	if "user" in session:
 		listaDiDiz = [																					# LISTA DI DIZIONARI CHE RAPPRESENTANO TUTTE LE LEZIONI
@@ -229,7 +229,8 @@ def calendario ():
 			"fine": "12:00",
 			"struttura": "Centro Studi sulle Arti della Russia",
 			"aula": "2C",
-			"prof": "Alberto Rossi"
+			"prof": "Alberto Rossi",
+			"HaPartecipato" : False
 			},
 			{ "id":2,
 			"nome": "Laboratorio di Intelligenza Artificaiale avanzata",
@@ -237,7 +238,8 @@ def calendario ():
 			"fine": "12:00",
 			"struttura": "Dipartimento di Scienze Ambientali",
 			"aula": "Online",
-			"prof": "Luca Bianchi"
+			"prof": "Luca Bianchi",
+			"HaPartecipato": True
 			}]
 		return render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"])
 	else:

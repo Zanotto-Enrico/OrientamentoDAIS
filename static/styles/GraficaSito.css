@@ -596,6 +596,24 @@ td {
     background-color:#ac0033;
 }
 
+.btnLezione2{
+    height: 70px;
+    width: 100%;
+    background-color: #ac0033;
+    border: none;
+    border-radius: 4px;
+    background: url(/static/imgs/check.png);
+    background-size: 30%;
+    background-position: center;
+    background-position-y: 20%;
+    background-repeat: no-repeat;
+    background-color: #ac0033;
+    color: #f8f9fa;
+    font-family: OpenSans-Regular;
+    font-size: 16px;
+    padding-top: 30%;
+}
+
 .btnModCorso{
     height: 70px;
     width: 100%;

@@ -33,7 +33,7 @@
                     <th> Titolo del progetto </th>
                     <th> Aula </th>
                     <th> Professore </th>
-                    <th> Conferma </th>
+                    <th> Presenza </th>
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +44,16 @@
                     <td> {{ lezione.nome }} </td>
                     <td> {{ lezione.aula }} </td>
                     <td> {{ lezione.prof }} </td>
-                    <td> <button class="btnLezione">Conferma</button>  </td>
+                    <td> 
+                        
+                        {% if lezione.HaPartecipato==False %}
+                        <form method='POST' action='calendario'> 
+                            <button class="btnLezione" name="idLezione" value={{lezione.id}}>Conferma</button> 
+                        </form>
+                        {% else %}
+                            <button class="btnLezione2" name="idLezione" >Confermato</button> 
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
