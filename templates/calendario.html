@@ -7,6 +7,42 @@
 
 {% block contenuto %}
     <h1> Calendario lezioni</h1>
+    
+    {% if richiedi==True %}
+    <div id = "popup" class="popup2" style="display: block;">
+    {% else %}
+    <div id = "popup" class="popup2" style="display: none;">
+    {% endif %}
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="server.togglePopup('popup')">&times;</div>
+            <h2>Codice di conferma</h2>
+            <p> Inserisci il codice fornito dal docente </p>
+            <form method='POST' action='calendario'>
+                <input type="text"  class="calendar-day" required="yes">
+                <button type="submit" class="ok-btn" >ok</button>
+            </form>
+        </div>
+    </div>
+
+    {% if error==True or success==True %}
+    <div id = "popup2" class="popup2" style="display: block;">
+    {% else %}
+    <div id = "popup2" class="popup2" style="display: none;">
+    {% endif %}
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="server.togglePopup('popup2')">&times;</div>
+            <h2>Codice di conferma</h2>
+            {% if error==True %}
+                <p> Errore: il codice inserito è errato.</br></br> Per confermare la partecipazione alla lezione è necessario inserire il codice fornito dal docente </p>
+            {% else %}
+                <p> Codice inserito corretto.</br></br> La tua partecipazione alla lezione è stata confermata </p>
+            {% endif %}
+            <div class="ok-btn" onclick="server.togglePopup('popup2')">ok</div>
+        </div>
+    </div>
+    
     <div class="div-data-calendario">
         <label  class="label1">Seleziona il giorno </label><br>
         <input type="date"  class="calendar-day" required="yes">

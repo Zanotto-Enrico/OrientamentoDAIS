@@ -802,6 +802,7 @@ td {
     text-align: center;
     border-radius: 10px;
     cursor: pointer;
+    border: none;
 }
 
 .benv-div{

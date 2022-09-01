@@ -241,7 +241,8 @@ def calendario ():
 			"prof": "Luca Bianchi",
 			"HaPartecipato": True
 			}]
-		return render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"])
+		pagina = JavaScriptServer	
+		return pagina.render(render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"]))
 	else:
 		return redirect(url_for("login"))
 
