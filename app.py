@@ -222,25 +222,7 @@ def logout():
 @app.route ('/calendario', methods=['GET','POST'])
 def calendario ():
 	if "user" in session:
-		listaDiDiz = [																					# LISTA DI DIZIONARI CHE RAPPRESENTANO TUTTE LE LEZIONI
-			{ "id":1,																					# VA SOSTITUITA CON CHIAMATA A FUNZIONE APPOSITA
-			"nome": "L'arte ai giovani! Incontriamo l'arte russa",
-			"inizio": "11:00",
-			"fine": "12:00",
-			"struttura": "Centro Studi sulle Arti della Russia",
-			"aula": "2C",
-			"prof": "Alberto Rossi",
-			"HaPartecipato" : False
-			},
-			{ "id":2,
-			"nome": "Laboratorio di Intelligenza Artificaiale avanzata",
-			"inizio": "11:00",
-			"fine": "12:00",
-			"struttura": "Dipartimento di Scienze Ambientali",
-			"aula": "Online",
-			"prof": "Luca Bianchi",
-			"HaPartecipato": True
-			}]
+		listaDiDiz = get_lezioni_giorno(session["user"], request.form["date"])
 		pagina = JavaScriptServer	
 		return pagina.render(render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"]))
 	else:
