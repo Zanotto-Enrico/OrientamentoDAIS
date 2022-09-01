@@ -643,15 +643,15 @@ def get_edifici_aule():
 def get_lezioni_giorno(user, date) :
     list = []
     
-    for lez in session.query(Lezioni).filter(Lezione.data == date).all() :
+    for lez in session.query(Lezioni).filter(Lezioni.data == date).all() :
         diz = {}
-        diz["id"] =	lez.id_aula
-		diz["nome"] = session.query(Corsi.nome).filter(Corsi.id_corso == lez.id_corso).limit(1)
-		diz["inizio"] = lez.orario_inizio
-		diz["fine"] = lez.orario_fine
-		diz["struttura"] = session.query(Corsi.descrizione).filter(Corsi.id_corso == lez.id_corso).limit(1)
-		diz["aula"] = session.query(Aule.nome).filter(and_(Corsi.id_corso == lez.id_corso, Aule.id_aula == Corsi.id_aula)).limit(1)
-		diz["prof"] = session.query(Corsi.docente.filter(Corsi.id_corso == lez.id_corso)).limit(1)
+        diz["id"] =	lez.id_aula 
+        diz["nome"] = session.query(Corsi.nome).filter(Corsi.id_corso == lez.id_corso).limit(1)
+        diz["inizio"] = lez.orario_inizio
+        diz["fine"] = lez.orario_fine
+        diz["struttura"] = session.query(Corsi.descrizione).filter(Corsi.id_corso == lez.id_corso).limit(1)
+        diz["aula"] = session.query(Aule.nome).filter(and_(Corsi.id_corso == lez.id_corso, Aule.id_aula == Corsi.id_aula)).limit(1)
+        diz["prof"] = session.query(Corsi.docente.filter(Corsi.id_corso == lez.id_corso)).limit(1)
         list.append(diz)
     
     return list
