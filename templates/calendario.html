@@ -19,13 +19,13 @@
             <h2>Codice di conferma</h2>
             <p> Inserisci il codice fornito dal docente </p>
             <form method='POST' action='calendario'>
-                <input type="text"  class="calendar-day" name="date" required="yes">
+                <input type="text"  class="calendar-day" name="secret" id="secret" required="yes">
                 <button type="submit" class="ok-btn" >ok</button>
             </form>
         </div>
     </div>
 
-    {% if error==True or success==True %}
+    {% if errore==True or successo==True %}
     <div id = "popup2" class="popup2" style="display: block;">
     {% else %}
     <div id = "popup2" class="popup2" style="display: none;">
@@ -34,7 +34,7 @@
         <div class="content">
             <div class="close-btn" onclick="server.togglePopup('popup2')">&times;</div>
             <h2>Codice di conferma</h2>
-            {% if error==True %}
+            {% if errore==True %}
                 <p> Errore: il codice inserito è errato.</br></br> Per confermare la partecipazione alla lezione è necessario inserire il codice fornito dal docente </p>
             {% else %}
                 <p> Codice inserito corretto.</br></br> La tua partecipazione alla lezione è stata confermata </p>
@@ -45,11 +45,13 @@
     
     <div class="div-data-calendario">
         <label  class="label1">Seleziona il giorno </label><br>
-        <input type="date"  class="calendar-day" required="yes">
-        <button type="submit" class="btnSetDate" onclick="" >Vai</button>
+        <form method='POST' action='calendario'>
+            <input type="date"  class="calendar-day" name="date" id="date" required="yes">
+            <button type="submit" class="btnSetDate" onclick="" >Vai</button>
+        </form>
     </div>
     <div class="div-giorno-selezionato">
-        <h2> 11 Maggio 2021 </h2>
+        <h2> {{data}}</h2>
     </div>
 
     <div class="divListaLezioni">
@@ -73,26 +75,31 @@
                 </tr>
             </thead>
             <tbody>
-                {% for lezione in info %}
-                <tr>
-                    <td> <h4> Inizio: {{ lezione.inizio }}<br> Fine: {{ lezione.fine }}</h4></td>
-                    <td> {{ lezione.struttura }} </td>
-                    <td> {{ lezione.nome }} </td>
-                    <td> {{ lezione.aula }} </td>
-                    <td> {{ lezione.prof }} </td>
-                    <td> 
-                        
-                        {% if lezione.HaPartecipato==False %}
-                        <form method='POST' action='calendario'> 
-                            <button class="btnLezione" name="idLezione" value={{lezione.id}}>Conferma</button> 
-                        </form>
-                        {% else %}
-                            <button class="btnLezione2" name="idLezione" >Confermato</button> 
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if info != None and info|length != 0 %}
+                    {% for lezione in info %}
+                    <tr>
+                        <td> <h4> Inizio: {{ lezione.inizio }}<br> Fine: {{ lezione.fine }}</h4></td>
+                        <td> {{ lezione.struttura }} </td>
+                        <td> {{ lezione.nome }} </td>
+                        <td> {{ lezione.aula }} </td>
+                        <td> {{ lezione.prof }} </td>
+                        <td> 
+                            
+                            {% if lezione.HaPartecipato==False %}
+                            <form method='POST' action='calendario'> 
+                                <button class="btnLezione" name="idLezione" value={{lezione.id}}>Conferma</button> 
+                            </form>
+                            {% else %}
+                                <button class="btnLezione2" name="idLezione" >Confermata</button> 
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
+        {% if info == None or info|length == 0 %}
+                <h2 style="text-align: center;"> Nessuna lezione </h2>
+        {%endif%}
     </div>
 {% endblock %}

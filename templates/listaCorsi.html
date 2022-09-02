@@ -6,16 +6,23 @@
 
 
 {% block contenuto %}
-    <h1> Lista Corsi</h1>
-    <div class="div-data-calendario">
-        <label  class="label1">Ricerca </label><br>
-        <div style>
-            <form method='POST' action='listaCorsi'>
-                <input type="text"  class="calendar-day" name="filter" required="yes">
-                <button type="submit" class="btnResearch" onclick="" >&nbsp;</button>
-            </form>
+
+    {% if soloIscritti == False%}
+        <h1> Lista Corsi</h1>
+        <div class="div-data-calendario">
+            <label  class="label1">Ricerca </label><br>
+            <div style>
+                <form method='POST' action='listaCorsi'>
+                    <input type="text"  class="calendar-day" name="filter" required="yes">
+                    <button type="submit" class="btnResearch" onclick="" >&nbsp;</button>
+                </form>
+            </div>
         </div>
-    </div>
+    {%else%}
+        <h1> I Tuoi Corsi</h1>
+    {%endif%}
+
+
     <div class="divListaCorsi">
         <table class="elencoCorsi">
             <colgroup>

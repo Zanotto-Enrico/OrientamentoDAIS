@@ -16,7 +16,7 @@ import string
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
 # modificare il contenuto di queste due variabili
-address = "127.0.0.1:5432"#"orientamentodais.com"
+address = "orientamentodais.com"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -282,14 +282,12 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
         return None
 
     # verifico che le aule siano libere prima di creare nuove lezioni
-    collisioni = check_disponibilita_aula(id_aula,orari, inizio.strftime("%d/%m/%Y"), fine.strftime("%d/%m/%Y") )
+    collisioni = check_disponibilita_aula(id_aula,orari, inizio.strftime("%Y-%m-%d"), fine.strftime("%Y-%m-%d") )
     
     if(len(collisioni) > 0):
         return collisioni
 
     # creo il corso effettivo con le relative informazioni e lo aggiungo alla base di dati
-    print("--------------------")
-    print(is_online)
     new_corso = Corsi(nome=nome, descrizione=descrizione, is_online=is_online, min_partecipanti=min_stud, max_partecipanti=max_stud, docente=docente, id_aula=id_aula)
     session.add(new_corso)
     session.commit()
@@ -297,7 +295,7 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
     # scorro tutte le date scelte e creo le varie lezioni del corso
     while(inizio <= fine):
         if(orari[inizio.isoweekday()-1] != None):
-            new_lesson = Lezioni(id_corso=new_corso.id_corso,secret_code=get_random_string(10),data=inizio.strftime("%d/%m/%Y"),orario_inizio=orari[inizio.isoweekday()-1],orario_fine=orariFine[orari[inizio.isoweekday()-1]])
+            new_lesson = Lezioni(id_corso=new_corso.id_corso,secret_code=get_random_string(10),data=inizio.strftime("%Y-%m-%d"),orario_inizio=orari[inizio.isoweekday()-1],orario_fine=orariFine[orari[inizio.isoweekday()-1]])
             session.add(new_lesson)
             session.commit()
         inizio = inizio + timedelta(days = 1)
@@ -336,6 +334,20 @@ def get_pdfchiavi(idcorso):
     except Exception as e:
         print("[!] - Errore nella generazione del pdf con i codici delle lezioni. Per maggiori info:")
         print(e)
+        
+
+#---- Metodo creato con lo scopo di confermare la partecipazione ad una data lezione
+#     tramite il codice segreto immesso dall'utente
+#     ritorna True o False in base al successo dell'operazione
+def conferma_partecipazione(idLezione, secret, username):
+    if(session.query(PartecipazioniLezione).filter(PartecipazioniLezione.id_lezione == idLezione and PartecipazioniLezione.username == username).count() > 0):
+        return True
+    if(secret == session.query(Lezioni.secret_code).filter(Lezioni.id_lezione == idLezione).first()[0]):
+        partecipazione  = PartecipazioniLezione(id_lezione=idLezione,username=username)
+        session.add(partecipazione)
+        session.commit()
+        return True
+    return False
         
     
 
@@ -530,18 +542,20 @@ def get_info_corso(id_corso):
 
 #---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
 #     rappresentare in maniera minimal le informazioni di un corso
-def get_lista_corsi(prof,filter):
+def get_lista_corsi(prof,filter,user):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
     
     # eseguo una query alla base di dati per ricevere l'oggetto corso filtrato per 
     # il professore se richiesto
     
-    query = session.query(Corsi);
+    query = session.query(Corsi)
     if(prof != None):
         query = query.filter(Corsi.docente==prof)
+    if(user != None):
+        query = query.filter(Corsi.id_corso ==  IscrizioniCorsi.id_corso).filter(IscrizioniCorsi.username == user)
     if(filter != None):
-        query = query.filter(Corsi.nome.like("%"+filter+"%"))
+        query = query.filter(Corsi.nome.ilike("%"+filter+"%"))
     
     corsi = list(query.all())
 
@@ -640,18 +654,22 @@ def get_edifici_aule():
         res[ed[1]] = lista
     return res
 
+
+
 def get_lezioni_giorno(user, date) :
     list = []
-    
-    for lez in session.query(Lezioni).filter(Lezioni.data == date).all() :
+    for lez in session.query(Lezioni).filter(and_(Lezioni.data == date,Lezioni.id_corso == IscrizioniCorsi.id_corso,IscrizioniCorsi.username ==user)).all():
         diz = {}
-        diz["id"] =	lez.id_aula 
-        diz["nome"] = session.query(Corsi.nome).filter(Corsi.id_corso == lez.id_corso).limit(1)
+        diz["id"] =	lez.id_lezione 
+        diz["nome"] = session.query(Corsi.nome).filter(Corsi.id_corso == lez.id_corso).first()[0]
         diz["inizio"] = lez.orario_inizio
         diz["fine"] = lez.orario_fine
-        diz["struttura"] = session.query(Corsi.descrizione).filter(Corsi.id_corso == lez.id_corso).limit(1)
-        diz["aula"] = session.query(Aule.nome).filter(and_(Corsi.id_corso == lez.id_corso, Aule.id_aula == Corsi.id_aula)).limit(1)
-        diz["prof"] = session.query(Corsi.docente.filter(Corsi.id_corso == lez.id_corso)).limit(1)
+        struttura = get_struttura(id_aula=int( session.query(Corsi.id_aula).filter(Corsi.id_corso == lez.id_corso).first()[0]))
+        diz["struttura"] = struttura.nome + " - " + struttura.indirizzo
+        diz["aula"] = session.query(Aule.nome).filter(and_(Corsi.id_corso == lez.id_corso, Aule.id_aula == Corsi.id_aula)).first()[0]
+        prof = session.query(Utenti.nome,Utenti.cognome).filter(Corsi.docente == Utenti.username, Corsi.id_corso == lez.id_corso).first()
+        diz["prof"] = prof[0] +" "+ prof[1]
+        diz["HaPartecipato"] = session.query(PartecipazioniLezione).filter(PartecipazioniLezione.id_lezione == lez.id_lezione and PartecipazioniLezione.username == user).count() > 0
         list.append(diz)
-    
+
     return list

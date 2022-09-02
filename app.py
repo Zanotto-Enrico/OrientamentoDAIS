@@ -10,6 +10,7 @@ from flask import Flask, request, render_template, redirect, url_for, session
 import jyserver.Flask as jsf
 from database import *
 from datetime import date
+from datetime import datetime
 
 
 app = Flask ( __name__ )
@@ -163,10 +164,20 @@ def benvenuto ():
 def listaCorsi ():
 	if "user" in session:
 		if(request.method == 'POST'):
-			listaDiDiz = get_lista_corsi(None,request.form.get("filter"))
+			listaDiDiz = get_lista_corsi(None,request.form.get("filter"),None)
 		else:
-			listaDiDiz = get_lista_corsi(None,None)
-		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
+			listaDiDiz = get_lista_corsi(None,None,None)
+		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"], soloIscritti=False)
+	else:
+		return redirect(url_for("login"))
+
+		
+#Carica la pagina con la lista dei corsi a cui ci si è iscritti
+@app.route ('/iTuoiCorsi', methods=['GET','POST'])
+def iTuoiCorsi ():
+	if "user" in session:
+		listaDiDiz = get_lista_corsi(None,None,session["user"])
+		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"], soloIscritti=True)
 	else:
 		return redirect(url_for("login"))
 
@@ -207,7 +218,7 @@ def creaCorso ():
 @app.route ('/gestisciCorsi', methods=['GET','POST'])
 def gestisciCorsi ():
 	if "user" in session and session["isProfessor"] == True:
-		listaDiDiz = get_lista_corsi(session["user"],None)
+		listaDiDiz = get_lista_corsi(session["user"],None,None)
 		return render_template("gestisciCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
 		return redirect(url_for("login"))
@@ -222,9 +233,27 @@ def logout():
 @app.route ('/calendario', methods=['GET','POST'])
 def calendario ():
 	if "user" in session:
-		listaDiDiz = get_lezioni_giorno(session["user"], request.form["date"])
+		if ("date" not in session):
+			session["date"] = date.today().strftime("%Y-%m-%d")
+		listaDiDiz = None; 
+		errore=successo=richiedi=False
+
+		if(request.method == 'POST'):
+			if(request.form.get("date") != None):
+				session["date"] = request.form.get("date")
+			if(request.form.get("idLezione") != None):
+				session["idLezione"] = request.form.get("idLezione")
+				richiedi = True
+			if(request.form.get("secret") != None):
+				if(conferma_partecipazione(session["idLezione"], request.form.get("secret"),session["user"]) == True):
+					successo= True
+				else:
+					errore = True
+		data = session["date"]
+		listaDiDiz = get_lezioni_giorno(session["user"], data)
+ 
 		pagina = JavaScriptServer	
-		return pagina.render(render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"]))
+		return pagina.render(render_template("calendario.html", info=listaDiDiz ,isProfessor=session["isProfessor"],data=datetime.strptime(data,'%Y-%m-%d').strftime("%d/%m/%Y"),errore=errore,successo=successo,richiedi=richiedi))
 	else:
 		return redirect(url_for("login"))
 
