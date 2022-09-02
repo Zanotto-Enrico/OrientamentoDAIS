@@ -16,7 +16,7 @@ import string
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
 # modificare il contenuto di queste due variabili
-address = "orientamentodais.com"#"orientamentodais.com"
+address = "127.0.0.1:5432"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -412,10 +412,8 @@ def is_professor(username):
 #---- Metodo utile per resituire direttamente la struttura in cui un'aula (identificata dall'id
 #     passato come parametro) è situata
 def get_struttura(id_aula):
-    # eseguo una query per poter ricevere il nome dell'aula e poi con il suo risultato 
-    # ricerco il nome dell'edificio con un'altra query
-    aula = session.query(Aule).filter_by(id_aula = id_aula).first()
-    return session.query(Edifici).filter_by(id_edificio = aula.id_edificio).first()
+    return session.query(Edifici).filter_by(id_edificio = 
+                                            session.query(Aule).filter_by(id_aula = id_aula).first().id_edificio).first()
 
 #---- Metodo utile per restituire il numero di iscritti ad un corso dato il suo id
 def get_iscritti(id_corso):

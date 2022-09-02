@@ -140,11 +140,10 @@ def register ():
                               is_professore = bool(request.form.get("professore")), 
                               scuolaprovenienza = request.form.get("scuola"))
   
-		if res == Return.SUCCESS:															#QUA VA LA VERIFICA DI REGISTRAZIONE NEL DATABASE
-			return JavaScriptServer.render(render_template("register.html", result="effettuata"))
-		elif res == Return.FAILURE:															# QUA NEL CASO FALLISSE
+		if res == Return.SUCCESS: return render_template("login.html")
+		elif res == Return.FAILURE:
 			return JavaScriptServer.render(render_template("register.html", result="fallita"))
-		elif res == Return.EXISTS:															# QUA NEL CASO L'ACCOUNT ESISTA GIA'
+		elif res == Return.EXISTS:
 			return JavaScriptServer.render(render_template("register.html", result="giaEsistente"))
 	else:
 		return JavaScriptServer.render(render_template("register.html"))
