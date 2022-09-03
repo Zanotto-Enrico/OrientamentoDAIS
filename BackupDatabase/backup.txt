@@ -65,7 +65,7 @@ id_corso SERIAL NOT NULL,
 username VARCHAR(50) NOT NULL,
 PRIMARY KEY (id_corso,username),
 FOREIGN KEY (id_corso) REFERENCES Corsi(id_corso) ON DELETE CASCADE,
-FOREIGN KEY (username) REFERENCES Partecipanti(username) ON DELETE CASCADE
+FOREIGN KEY (username) REFERENCES Partecipanti(username)
 );
 
 
