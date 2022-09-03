@@ -12,7 +12,9 @@
     {% endif %}
         <header>
             <div class="header-container" >
-                <img src="{{url_for('static', filename='imgs/logo.png')}}" class="imgtitle" />
+                <a href="benvenuto">
+                    <img src="{{url_for('static', filename='imgs/logo.png')}}" class="imgtitle" />
+                </a>
                 <div class="btn-container">
                     {% if isProfessor==False %}
                         <button type="button"  class="menubtn" onclick="location.href = 'listaCorsi';">Lista corsi </button>

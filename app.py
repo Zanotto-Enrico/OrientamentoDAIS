@@ -16,14 +16,22 @@ from datetime import datetime
 app = Flask ( __name__ )
 app.secret_key = "JG{~^VQnAX8dK*4P'=/XTg^rBhH_psx+/zK9#>YkR_bWd7Av"
 
-#---------- JavaScript
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+# |        									JAVASCRIPT SERVER											|
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+
+# Le funzioni in questa classe possono essere utilizzate per usufruire del server javascript di jyserver 
+# Per fare ciò la pagina deve essere renderizzata usando questa classe. Non tutte le pagine ne fanno uso
 
 @jsf.use(app)
 class JavaScriptServer:
+	
+	# Funzione usata da CreaCorso Per tenere traccia di quali giorni della settimana sono stati scelti
 	def __init__(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
 	
+	# Funzione usata da CreaCorso per memorizzare gli edifici e aule da mostrare dinamicamente
 	def setEdifici(self,diz):
 		self.diz = diz
 	
@@ -44,6 +52,7 @@ class JavaScriptServer:
 		else:
 			self.js.document.getElementById("almenoUnGiorno").style.display = "none"
 
+	# Funzione per aggiornare la dropdown contenente le aule dopo che l'utente ha selezionato l'edificio
 	def updateAulaDrop(self):
 		edificio = self.js.document.getElementById("edificio").value
 		self.js.document.getElementById("aula").value = 0
@@ -57,6 +66,7 @@ class JavaScriptServer:
 		for aula in range(i, 19,1):
 			self.js.document.getElementById(aula).style.display = "none"
 
+	# Funzione per disabilitare la textBox scuola di provenienza se l'utente si sta iscrivendo come docente
 	def CheckBoxProfessore(self):
 		if(self.js.document.getElementById("scuola").disabled == True ):
 			self.js.document.getElementById("scuola").removeAttribute('disabled')
@@ -65,28 +75,21 @@ class JavaScriptServer:
 			self.js.document.getElementById("scuola").removeAttribute('required')
 			self.js.document.getElementById("scuola").setAttribute('disabled', '')
 
-
+	# Resetta le i contatori contenenti i giorni della settimana scelti dall'utente in CreaCorso
 	def reset(self):
 		self.giorni = {"lun": 0,"mar": 0,"mer": 0,"gio": 0,"ven": 0,"sab": 0,"dom": 0,}
 		self.totalCount = 0
 
+	# chiude il popup che le viene passato come id
 	def togglePopup(self,id):
 		self.js.document.getElementById(id).style.display = "none"
 
-	def setIdCorso(self, id_corso):
-		self.id_corso = id_corso
 
-	def downloadList(self):
-		print(self.id_corso) #self.id_corso contiene l'id del corso da cui scaricare il certificato
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+# |        									LOG FILES  													|
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
 
-	
-	def downloadCert(self):
-		session["attestato"] = get_attestatocorso(id_utente=session["user"],id_corso=self.id_corso)
-		return redirect(url_for("login"))
-
-
-
-#---------- LOG FILES
+# settings per gestire l'output di log e di errori. Utile in fase di debug
 
 handler = RotatingFileHandler('./logs/logs.log', maxBytes=1000000, backupCount=5)
 handler.setLevel(logging.DEBUG)
@@ -96,7 +99,12 @@ log.setLevel(logging.DEBUG)
 log.addHandler(handler)
 #app.run(host='0.0.0.0', debug=True)
 
-#----------- PAGINE WEB
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+# |        									PAGINE WEB  												|
+# + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+
+# Le seguenti funzioni vengono chiamate da flask per eseguire il render di tutte le pagine web
+
 
 @app.route('/test_db')
 def test_db():
@@ -109,6 +117,7 @@ def test_db():
 def login ():
 	if request.method == 'POST':
 
+		# se la richiesta à un post verifico se si sta tentando di accedere
 		if check_user_login(username = str(request.form.get("username")), password = str(request.form.get("password"))) == Return.SUCCESS:
 			session["user"] = request.form.get("username")
    
@@ -131,6 +140,7 @@ def login ():
 def register ():
 	if request.method == 'POST':
 		
+		# se la richiesta è un post tento di creare un nuovo account e informo l'utente del successo dell'operazione
 		res = insert_new_user(username = request.form.get("username"), 
                         	  nome = request.form.get("nome"), 
                               cognome = request.form.get("cognome"),
@@ -162,6 +172,7 @@ def benvenuto ():
 @app.route ('/listaCorsi', methods=['GET','POST'])
 def listaCorsi ():
 	if "user" in session:
+		# verifico se si sta cercando di caricare tutti i corsi o se si ha inserito una parola chiave nel box di ricerca
 		if(request.method == 'POST'):
 			listaDiDiz = get_lista_corsi(None,request.form.get("filter"),None)
 		else:
@@ -175,6 +186,7 @@ def listaCorsi ():
 @app.route ('/iTuoiCorsi', methods=['GET','POST'])
 def iTuoiCorsi ():
 	if "user" in session:
+		# ottengo solo i corsi a cui l'utente è iscritto
 		listaDiDiz = get_lista_corsi(None,None,session["user"])
 		return render_template("listaCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"], soloIscritti=True)
 	else:
@@ -184,12 +196,18 @@ def iTuoiCorsi ():
 @app.route ('/creaCorso', methods=['GET', 'POST'])
 def creaCorso ():
 	if "user" in session and session["isProfessor"] == True:
+		#ottengo la settimana corrente e la setto come minima impostabile
+		today = datetime.today().isocalendar()
+		minDate = str(today.year) +"-W"+ str(today.week).zfill(2)
+		#ottengo il dizionario con i vari edifici e le relative aule 
 		diz = get_edifici_aule()
+
 		pagina = JavaScriptServer
 		pagina.setEdifici(diz)
 		pagina.reset()
 		collisioni = []
 		if request.method == 'POST':
+			# creo corso e salvo in collisioni le date che sono già occupate nel caso sia fallita la creazione
 			collisioni = insert_new_corso(nome = request.form.get("name"),
 						descrizione = request.form.get("description"),
 						is_online = request.form.get("tipologia")=="online",
@@ -202,13 +220,13 @@ def creaCorso ():
 						orari = [request.form.get("orariolun"),request.form.get("orariomar"),request.form.get("orariomer"),
 								request.form.get("orariogio"),request.form.get("orarioven"),request.form.get("orariosab"),None])
 			if(collisioni == None):
-				return pagina.render(render_template("creaCorso.html",diz=diz,errore=1,riusito=0))
+				return pagina.render(render_template("creaCorso.html",diz=diz,errore=1,riusito=0, minDate=minDate))
 			elif(len(collisioni) > 0):
-				return pagina.render(render_template("creaCorso.html",diz=diz,collisioni = get_info_lezioni(lezioni=collisioni), errore=0,riusito=0))
+				return pagina.render(render_template("creaCorso.html",diz=diz,collisioni = get_info_lezioni(lezioni=collisioni), errore=0,riusito=0, minDate=minDate))
 			else:
-				return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riuscito=1))
+				return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riuscito=1, minDate=minDate))
 		else:
-			return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riusito=0))
+			return pagina.render(render_template("creaCorso.html", diz=diz, errore=0,riusito=0, minDate=minDate))
 
 	else:
 		return redirect(url_for("login"))
@@ -217,6 +235,8 @@ def creaCorso ():
 @app.route ('/gestisciCorsi', methods=['GET','POST'])
 def gestisciCorsi ():
 	if "user" in session and session["isProfessor"] == True:
+
+		# ottengo solo i corsi di cui l'utente è proprietario
 		listaDiDiz = get_lista_corsi(session["user"],None,None)
 		return render_template("gestisciCorsi.html",info=listaDiDiz , isProfessor=session["isProfessor"])
 	else:
@@ -232,22 +252,29 @@ def logout():
 @app.route ('/calendario', methods=['GET','POST'])
 def calendario ():
 	if "user" in session:
+		
+		# se l'utente non ha ancora inserito una data nel calendario carico le lezioni di "oggi"
 		if ("date" not in session):
 			session["date"] = date.today().strftime("%Y-%m-%d")
+		
 		listaDiDiz = None; 
 		errore=successo=richiedi=False
 
+		# i seguenti casi si verificano in base al comportamento dell'utente
 		if(request.method == 'POST'):
-			if(request.form.get("date") != None):
+			if(request.form.get("date") != None):						# se l'utente ha richiesto una data 
 				session["date"] = request.form.get("date")
-			if(request.form.get("idLezione") != None):
+			if(request.form.get("idLezione") != None):					# se l'utente ha cliccato su una lezione
 				session["idLezione"] = request.form.get("idLezione")
 				richiedi = True
-			if(request.form.get("secret") != None):
+			if(request.form.get("secret") != None):						# se l'utente ha inserito il codice segreto della lezione
+				# confermo l'autenticità del codice e eventualmente confermo la sua presenza alla lezione
 				if(conferma_partecipazione(session["idLezione"], request.form.get("secret"),session["user"]) == True):
 					successo= True
 				else:
 					errore = True
+
+		# ottengo infine le lezioni per il giorno che si è deciso 
 		data = session["date"]
 		listaDiDiz = get_lezioni_giorno(session["user"], data)
  
@@ -260,21 +287,30 @@ def calendario ():
 @app.route ('/infoCorso', methods=['POST'])
 def infoCorso ():
 	if "user" in session:
-		if request.form.get("idCorso") != None : session["idCorso"] = request.form.get("idCorso")
-		iscritto = check_iscrizione(session["idCorso"], session["user"])														# VARIABILE DA ASSEGNARE A TRUE SE GIà ISCRITTO
-		iscrivimi = request.form.get("iscrivimi")											# E FALSE ALTRIMENTI (TRAMITE FUNZIONE APPOSITA IN DATBASE.PY)
+		if request.form.get("idCorso") != None : 
+			session["idCorso"] = request.form.get("idCorso")
+		
+		# verifico se l'utente è iscritto a questo corso
+		iscritto = check_iscrizione(session["idCorso"], session["user"])														
+		
+		# verifico se l'utente ha espresso di volersi iscrivere o disiscrivere
+		iscrivimi = request.form.get("iscrivimi")											
 		annulla = request.form.get("annulla")
 		result=""
+
+		# verifico che si voglia iscrivere e che non sia già iscritto
 		if iscrivimi == "1":
-			if iscritto == True:												# VERIFICO CHE L'UTENTE NON SIA GIà ISCRITTO
+			if iscritto == True:												
 				result = "Già iscritto"
 			elif gestione_iscriz(session["idCorso"], session["user"], "I") == True:
 				result = "effettuata"
 				iscritto = True
 			else:
 				result = "fallita"
+		
+		# verifico che si voglia disiscrivere e che non sia già disiscritto
 		if annulla == "1":
-			if iscritto == False:												# VERIFICO CHE L'UTENTE NON SIA GIà NON ISCRITTO
+			if iscritto == False:												
 				result="Già disiscritto"
 			elif gestione_iscriz(session["idCorso"], session["user"], "A") == True:
 				result = "annullata"
@@ -282,6 +318,7 @@ def infoCorso ():
 			else:
 				result = "annullamento-fallito"
 		
+		# verifico la disponibilità di un certificato se l'utente ha già partecipato a tutte le lezioni
 		certificato = has_user_completed_course(session["idCorso"], session["user"])
 
 		if session["idCorso"] != None:
@@ -302,10 +339,8 @@ def gestisciCorso ():
 
 		if session["idCorso"] != None:
 			diz = get_info_corso(id_corso = session["idCorso"])
-			pagina = JavaScriptServer
-			pagina.setIdCorso(session["idCorso"])
 			
-			return pagina.render(render_template("gestisciCorso.html", info=diz, isProfessor=session["isProfessor"]))
+			return render_template("gestisciCorso.html", info=diz, isProfessor=session["isProfessor"])
 		else:
 			return redirect(url_for("gestisciCorsi"))
 	else:
@@ -317,8 +352,8 @@ def gestisciCorso ():
 def eliminaCorso ():
 	if "user" in session and session["idCorso"] != None:
 			
-		if True:											# NELL'IF VA VERIFICATO SE L'UTENTE È IL PROF PROPRIETARIO DEL CORSO
-			tmp = 0 # QUA AL POSTO DI QUESTO ASSEGNAMENTO VA CHIAMATA LA FUNZIONE PER CANCELLARE IL CORSO
+		if True:
+			remove_corso(session["idCorso"])
 
 		return redirect(url_for("gestisciCorsi"))
 
@@ -330,13 +365,10 @@ def eliminaCorso ():
 @app.route ('/listaIscritti', methods=['GET','POST'])
 def listaIscritti ():
 	if "user" in session:
-		if session["idCorso"] != None:											# DIZIONARIO DA RIEMPIRE CON LE INFO DEGLI ISCRITTI AL CORSO
-			lista =[    ["Cre_98","Crescenzo","Giustino","giustino@gmail.com","10"], 
-						["antonina_sev","Antonina", "Severina","antonina@hotmail.com","0"], 
-						["greg_nal","Naldo", "Gregorio","greg@gmail.com","5"], 
-						["MariSab0077","Mariano","Sabino","marix@stud.unive.it","9"], 
-						["arianna_888","Enrichetta","Arianna", "ari@gmail.com","11"]]
+		if session["idCorso"] != None:
 
+			# ottengo i dati degli iscritti al corso compreso il numero di lezioni frequentate
+			lista = get_dati_iscritti(session["idCorso"])
 			return render_template("iscritti.html", isProfessor=session["isProfessor"], lista=lista)
 	else:
 		return redirect(url_for("login"))

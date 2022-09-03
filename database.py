@@ -16,7 +16,7 @@ import string
 # VARIABILI GLOBALI CHE PERMETTONO DI CONNETTERSI AL DATABASE 
 # Se si necessita di cambiare la modalità di connessione basta
 # modificare il contenuto di queste due variabili
-address = "127.0.0.1:5432"#"orientamentodais.com"
+address = "orientamentodais.com"#"orientamentodais.com"
 database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
@@ -302,6 +302,13 @@ def insert_new_corso(nome, descrizione, is_online, min_stud, max_stud, docente, 
     
     return collisioni
 
+#---- Metodo per l'eliminazione di un corso con le relative lezioni.
+#     Eliminando le lezioni rimuoverà anche le partecipazioni alle lezioni
+def remove_corso(idCorso):
+    result = session.query(Corsi).filter_by(id_corso = idCorso).delete()
+    session.commit()
+
+
 #---- Metodo utile per generare un pdf contenente tutte le chiavi relative alle lezioni di un
 #     determinato corso, identificato mediante il parametro idcorso
 def get_pdfchiavi(idcorso):
@@ -537,6 +544,15 @@ def get_info_corso(id_corso):
         print("[!] - Errore nella restituzione delle informazioni relative al corso con id: " + id_corso + ", verificare il metodo get_info_corso(...)\n")
         print(e)
     
+
+#---- Metodo che, dato l'id di un corso, restituisce il dati dei partecipanti con il numero di lezioni frequentate
+def get_dati_iscritti(idCorso):
+    info =  session.query(Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email, func.count(Utenti.username)).filter(
+                    and_(IscrizioniCorsi.id_corso == idCorso, PartecipazioniLezione.id_lezione == Lezioni.id_lezione, 
+                            Lezioni.id_corso == IscrizioniCorsi.id_corso, PartecipazioniLezione.username == IscrizioniCorsi.username, IscrizioniCorsi.username == Utenti.username)).group_by(
+                    Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email).all()
+    return info
+
 
 #---- Metodo che restituisce una lista di dizionari contenenti alcune informazioni essenziali per
 #     rappresentare in maniera minimal le informazioni di un corso
