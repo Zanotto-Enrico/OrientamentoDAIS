@@ -21,9 +21,6 @@ database = "orientamento"
 # per il locale usa '127.0.0.1:5432', 'orientamentodais_locale'
 #-------------------------------------------------------------
 
-
-# PER ACCEDERE AL DB USARE VARIABILE GLOBALE session
-# CREATA DENTRO AD initialize_db
 Base = declarative_base()
 
 # definito un tipo enumerativo per la gestione dei casi che possono verificarsi quando
@@ -139,7 +136,6 @@ class Corsi(Base):
 # |        METODI       |
 # + - - - - - - - - - - +
 
-
 #---- Metodo utilizzato per inizializzare la sessione di connessione alla base di dati
 def initialize_db (user):
     try:
@@ -161,14 +157,6 @@ def initialize_db (user):
         print("[*] - Errore nella creazione della sessione\n" + 
               "      Vedi metodo initialize_db(...)")
         return False
-
-#---- CANCELLARE ----
-def dump ():
-    initialize_db('admin')
-    l = list()
-    for i in get_users():
-        l.append(str(i))
-    return l
 
 #---- Metodo utilizzato per verificare se è già stata creata una connessione valida alla 
 #     base di dati, se così non è richiama il metodo di inizializzazione
@@ -419,35 +407,49 @@ def is_professor(username):
 #---- Metodo utile per resituire direttamente la struttura in cui un'aula (identificata dall'id
 #     passato come parametro) è situata
 def get_struttura(id_aula):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(Edifici).filter_by(id_edificio = 
                                             session.query(Aule).filter_by(id_aula = id_aula).first().id_edificio).first()
 
 #---- Metodo utile per restituire il numero di iscritti ad un corso dato il suo id
 def get_iscritti(id_corso):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(IscrizioniCorsi).filter_by(id_corso = id_corso).count()
 
 #---- Metodo utile per restituire il numero di lezioni in cui un corso (identificato dall'id
 #     passato come argomento) è suddiviso 
 def get_nlezioni(id_corso):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(Lezioni).filter_by(id_corso = id_corso).count()
 
 #---- Metodo utile per restituire il numero di lezioni di un determinato corso
 #     in cui un utente ha dimostrato di aver preso parte
 def get_npartecipazioni(id_corso, username):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(Lezioni,PartecipazioniLezione).filter(and_(Lezioni.id_corso == id_corso, PartecipazioniLezione.username == username, 
                                                                     PartecipazioniLezione.id_lezione == Lezioni.id_lezione)).count()
 
 #---- Metodo che, passato l'username dello studente, restituisce il numero di corsi ai quali
 #     appare iscritto
 def get_numeroiscrizioni(username):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(IscrizioniCorsi).filter_by(username = username).count()
 
 #---- Metodo che, dato un professore, restituisce il numero di corsi da lui tenuti
 def get_corsitenuti(prof):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     return session.query(Corsi).filter_by(docente = prof).count()
 
 
 def check_iscrizione(id_Corso, id_Studente):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     if(session.query(IscrizioniCorsi).filter(and_(IscrizioniCorsi.id_corso == id_Corso, IscrizioniCorsi.username == id_Studente)).first() != None):
         return True
     return False
@@ -461,6 +463,8 @@ def has_user_completed_course(id_corso, username):
 #     da id_corso e utente da username) se il valore contenuto nella variabile tipo è uguale 
 #     a 'I'. Rimuove invece l'iscrizione se il contenuto della variabile tipo è 'A'
 def gestione_iscriz(id_corso, username, tipo):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     if(tipo == "I"):   
         try:
             result = IscrizioniCorsi(id_corso = id_corso, username = username)
@@ -488,6 +492,8 @@ def gestione_iscriz(id_corso, username, tipo):
 #---- Metodo che verifica la disponibilità di un aula di poter ospitare una lezione
 #     Ritorna False se l'aula è gia occupata in quella data e ora, True altrimenti
 def check_disponibilita_aula(id_aula, orari, dataInizio, dataFine):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     collisioni = []
     for dayofweek in range(1,7):
         result = None
@@ -545,12 +551,18 @@ def get_info_corso(id_corso):
         print(e)
     
 
-#---- Metodo che, dato l'id di un corso, restituisce il dati dei partecipanti con il numero di lezioni frequentate
+#---- Metodo che, dato l'id di un corso, restituisce il dati dei partecipanti 
+#     con il numero di lezioni frequentate
 def get_dati_iscritti(idCorso):
+    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
+    check_session()
     info =  session.query(Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email, func.count(Utenti.username)).filter(
                     and_(IscrizioniCorsi.id_corso == idCorso, PartecipazioniLezione.id_lezione == Lezioni.id_lezione, 
                             Lezioni.id_corso == IscrizioniCorsi.id_corso, PartecipazioniLezione.username == IscrizioniCorsi.username, IscrizioniCorsi.username == Utenti.username)).group_by(
                     Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email).all()
+                            
+    print("-----------------------\n")
+    print(info)
     return info
 
 
