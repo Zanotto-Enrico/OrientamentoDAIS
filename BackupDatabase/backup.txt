@@ -73,7 +73,7 @@ create table PartecipazioniLezione(
 id_lezione SERIAL NOT NULL,
 username VARCHAR(50) NOT NULL,
 PRIMARY KEY (id_lezione,username),
-FOREIGN KEY (id_lezione) REFERENCES Lezioni(id_lezione),
+FOREIGN KEY (id_lezione) REFERENCES Lezioni(id_lezione) ON DELETE CASCADE,
 FOREIGN KEY (username) REFERENCES Partecipanti(username)
 );
 
@@ -91,6 +91,7 @@ GRANT CONNECT ON DATABASE orientamento TO ruoloutente;
 GRANT USAGE ON SCHEMA public TO ruoloutente;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO ruoloutente;
 GRANT DELETE,UPDATE,INSERT ON IscrizioniCorsi,PartecipazioniLezione TO ruoloutente;
+GRANT USAGE, SELECT ON SEQUENCE iscrizionicorsi_id_corso_seq, partecipazionilezione_id_lezione_seq TO ruoloutente;
 
 
 CREATE ROLE ruoloprof;
@@ -98,12 +99,14 @@ GRANT CONNECT ON DATABASE orientamento TO ruoloprof;
 GRANT USAGE ON SCHEMA public TO ruoloprof;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO ruoloprof;
 GRANT DELETE,UPDATE,INSERT ON Corsi,Lezioni TO ruoloprof;
+GRANT USAGE, SELECT ON SEQUENCE lezioni_id_lezione_seq, corsi_id_corso_seq TO ruoloprof;
 
 CREATE ROLE ruoloadmin;
 GRANT ALL ON DATABASE orientamento TO ruoloadmin;
 GRANT USAGE ON SCHEMA public TO ruoloadmin;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO ruoloadmin;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO ruoloadmin;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ruoloadmin;
 
 
 CREATE USER utente WITH PASSWORD 'CLgC92dK9DbEkrMSRS4j';
