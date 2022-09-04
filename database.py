@@ -162,7 +162,7 @@ def initialize_db (user):
 #     base di dati, se così non è richiama il metodo di inizializzazione
 def check_session():
     if 'session' not in globals():
-        initialize_db('admin')
+        initialize_db(session['access'])
     
 
 #---- Metodo utilizzato per inserire un nuovo utente nella base di dati
@@ -242,8 +242,8 @@ def get_docenti():
 #---- Metodo utile per verificare le credenziali fornite in fase di accesso e quindi per stabilire
 #     se l'utente può avere accesso all'area privata del sito
 def check_user_login(username, password):
-    # controllo se è già stata inizializzata la sessione di connessione alla base di dati
-    check_session()
+    # inizializzo la connessione al database
+    initialize_db('admin')
     
     for u in get_users():
         # prima di tutto genero l'hash della nuova password e poi comparo gli hash

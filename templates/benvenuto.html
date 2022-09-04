@@ -12,10 +12,12 @@
     <h1>Benvenuto {{user}}!</h1> 
     <div>
         <a href="listaCorsi"> Lista Corsi</a>
-        <a href="profilo"> Profilo</a>
+        
         {% if isProfessor==False %}
+        <a href="profilo"> Profilo</a>
         <a href="calendario"> Calendario </a>
         {% else %}
+        <a href="gestisciCorsi"> Gestione Corsi</a>
         <a href="creaCorso"> Crea Corso</a>
         {% endif %}
     </div>

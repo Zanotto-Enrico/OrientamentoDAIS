@@ -105,12 +105,6 @@ log.addHandler(handler)
 
 # Le seguenti funzioni vengono chiamate da flask per eseguire il render di tutte le pagine web
 
-
-@app.route('/test_db')
-def test_db():
-    print(dump())
-    return '<h1 style="text-align: center; font-family: Arial"><b>Guardare ouput nella console</b></h1>'
-
 #Carica la pagina di login
 @app.route ('/', methods=['GET','POST'])
 @app.route ('/login', methods=['GET','POST'])
@@ -125,9 +119,11 @@ def login ():
    			# di conseguenza
 			if is_professor(username = str(request.form.get("username"))) == True:
 				session["isProfessor"] = True
+				session['access'] = 'prof'
 			else:
 				session["isProfessor"] = False
-    
+				session['access'] = 'utente'
+			initialize_db(session['access'])
 			return redirect(url_for("benvenuto"))
 		else:
 			return render_template("login.html", fallito=True)
