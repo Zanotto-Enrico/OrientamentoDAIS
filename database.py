@@ -556,13 +556,13 @@ def get_info_corso(id_corso):
 def get_dati_iscritti(idCorso):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
     check_session()
-    info =  session.query(Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email, func.count(Utenti.username)).filter(
-                    and_(IscrizioniCorsi.id_corso == idCorso, PartecipazioniLezione.id_lezione == Lezioni.id_lezione, 
-                            Lezioni.id_corso == IscrizioniCorsi.id_corso, PartecipazioniLezione.username == IscrizioniCorsi.username, IscrizioniCorsi.username == Utenti.username)).group_by(
-                    Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email).all()
+    result =   session.query(Utenti.username,Utenti.nome,Utenti.cognome,Utenti.email).filter(
+                    and_(IscrizioniCorsi.id_corso == idCorso, IscrizioniCorsi.username == Utenti.username)).all()
+    info = []
+    for item in result:
+        info.append([item[0] ,item[1] ,item[2], item[3] ,session.query(PartecipazioniLezione, IscrizioniCorsi).filter(and_( PartecipazioniLezione.username == item[0], PartecipazioniLezione.username == IscrizioniCorsi.username)).filter(
+                                                          and_(IscrizioniCorsi.id_corso == idCorso, Lezioni.id_lezione == PartecipazioniLezione.id_lezione, Lezioni.id_corso == IscrizioniCorsi.id_corso)).count()])
                             
-    print("-----------------------\n")
-    print(info)
     return info
 
 
