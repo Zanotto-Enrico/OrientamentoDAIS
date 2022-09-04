@@ -97,7 +97,7 @@ CREATE ROLE ruoloprof;
 GRANT CONNECT ON DATABASE orientamento TO ruoloprof;
 GRANT USAGE ON SCHEMA public TO ruoloprof;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO ruoloprof;
-GRANT DELETE,UPDATE,INSERT ON Corsi,Lezioni TO ruoloutente;
+GRANT DELETE,UPDATE,INSERT ON Corsi,Lezioni TO ruoloprof;
 
 CREATE ROLE ruoloadmin;
 GRANT ALL ON DATABASE orientamento TO ruoloadmin;
