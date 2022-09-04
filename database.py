@@ -701,7 +701,7 @@ def get_lezioni_giorno(user, date) :
         diz["aula"] = session.query(Aule.nome).filter(and_(Corsi.id_corso == lez.id_corso, Aule.id_aula == Corsi.id_aula)).first()[0]
         prof = session.query(Utenti.nome,Utenti.cognome).filter(Corsi.docente == Utenti.username, Corsi.id_corso == lez.id_corso).first()
         diz["prof"] = prof[0] +" "+ prof[1]
-        diz["HaPartecipato"] = session.query(PartecipazioniLezione).filter(PartecipazioniLezione.id_lezione == lez.id_lezione and PartecipazioniLezione.username == user).count() > 0
+        diz["HaPartecipato"] = session.query(PartecipazioniLezione).filter(and_(PartecipazioniLezione.id_lezione == lez.id_lezione, PartecipazioniLezione.username == user)).count() > 0
         list.append(diz)
 
     return list
