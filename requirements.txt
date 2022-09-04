@@ -1,0 +1,4 @@
+Flask==3.0.3
+fpdf==1.7.2
+jyserver==0.0.5
+SQLAlchemy==2.0.35
