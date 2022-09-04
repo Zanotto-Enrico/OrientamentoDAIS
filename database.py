@@ -335,7 +335,7 @@ def get_pdfchiavi(idcorso):
 #     tramite il codice segreto immesso dall'utente
 #     ritorna True o False in base al successo dell'operazione
 def conferma_partecipazione(idLezione, secret, username):
-    if(session.query(PartecipazioniLezione).filter(PartecipazioniLezione.id_lezione == idLezione and PartecipazioniLezione.username == username).count() > 0):
+    if(session.query(PartecipazioniLezione).filter(and_(PartecipazioniLezione.id_lezione == idLezione, PartecipazioniLezione.username == username)).count() > 0):
         return True
     if(secret == session.query(Lezioni.secret_code).filter(Lezioni.id_lezione == idLezione).first()[0]):
         partecipazione  = PartecipazioniLezione(id_lezione=idLezione,username=username)
