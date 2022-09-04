@@ -551,7 +551,7 @@ def get_info_corso(id_corso):
                 "iscritti": get_iscritti(id_corso=corso.id_corso),
                 "prof": prof.nome + " " + prof.cognome,
                 "descrizione": corso.descrizione,
-                "inizio": get_primalezione(corso.id_corso).data}
+                "inizio": datetime.strptime(str(get_primalezione(corso.id_corso).data),'%Y-%m-%d').strftime("%d/%m/%Y") }
     except Exception as e:
         print("[!] - Errore nella restituzione delle informazioni relative al corso con id: " + id_corso + ", verificare il metodo get_info_corso(...)\n")
         print(e)
