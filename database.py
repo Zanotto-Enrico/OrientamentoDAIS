@@ -376,7 +376,7 @@ def get_attestatocorso(id_utente, id_corso):
             pdf.cell(180,20,'',align='C',ln=1)
             pdf.set_font("Arial", size = 17)
             pdf.cell(180, 10, txt="Di seguito una breve descrizione del corso seguito:", ln=1,align='C')
-            pdf.cell(180, 10, txt=corso["descrizione"], ln=1,align='C')
+            pdf.multi_cell(180, 10, txt=corso["descrizione"],align='C')
             pdf.cell(180,20,'',align='C',ln=1)
             pdf.image("static/imgs/unive.png",x=80)
             
