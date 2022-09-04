@@ -194,7 +194,7 @@ def creaCorso ():
 	if "user" in session and session["isProfessor"] == True:
 		#ottengo la settimana corrente e la setto come minima impostabile
 		today = datetime.today().isocalendar()
-		minDate = str(today.year) +"-W"+ str(today.week).zfill(2)
+		minDate = str(today[0]) +"-W"+ str(today[1]).zfill(2)
 		#ottengo il dizionario con i vari edifici e le relative aule 
 		diz = get_edifici_aule()
 
