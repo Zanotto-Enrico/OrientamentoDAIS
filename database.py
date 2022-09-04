@@ -168,7 +168,7 @@ def check_session():
 #---- Metodo utilizzato per inserire un nuovo utente nella base di dati
 def insert_new_user(username, nome, cognome, email, data_nascita, password, is_professore, scuolaprovenienza = ''):
     # controllo se è già stata inizializzata la sessione di connessione alla base di dati
-    check_session()
+    initialize_db('admin')
         
     try:
         # prima di tutto genero l'hash della nuova password
