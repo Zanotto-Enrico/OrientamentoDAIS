@@ -467,6 +467,8 @@ def gestione_iscriz(id_corso, username, tipo):
     check_session()
     if(tipo == "I"):   
         try:
+            if(get_iscritti(id_corso) >= get_info_corso(id_corso)["postimax"] ):
+                return False
             result = IscrizioniCorsi(id_corso = id_corso, username = username)
             session.add(result)
             # rendo subito effettive le modifiche sulla base di dati tramite un commit
@@ -687,7 +689,8 @@ def get_edifici_aule():
     return res
 
 
-
+#---- Metodo avente il compito di restituire una lista di dizionari rappresentatni le informazioni
+#     relative alle lezioni che uno studente deve seguire in un determinato giorno
 def get_lezioni_giorno(user, date) :
     list = []
     for lez in session.query(Lezioni).filter(and_(Lezioni.data == date,Lezioni.id_corso == IscrizioniCorsi.id_corso,IscrizioniCorsi.username ==user)).all():

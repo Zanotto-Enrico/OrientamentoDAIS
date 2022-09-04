@@ -398,13 +398,3 @@ def chiavi():
 		response.headers['Content-Type'] = 'application/pdf'
 		response.headers['Content-Disposition'] = 'inline; filename=chiavi.pdf'
 		return response
-
-@app.route('/test', methods=['GET','POST'])
-def test():
-    session["idCorso"] = 1
-    print(session["idCorso"])
-    pdf = get_pdfchiavi(session["idCorso"])
-    response = make_response(pdf.output(dest='S').encode('latin-1'))
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=chiavi.pdf'
-    return response
