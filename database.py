@@ -508,6 +508,12 @@ def check_disponibilita_aula(id_aula, orari, dataInizio, dataFine):
                 collisioni.append(item[0])
     return collisioni
 
+#---- Metodo avente il compito di restiruire un oggetto corrispondente alla prima lezione
+#     in assoluto di un corso
+def get_primalezione(id_corso):
+    print(session.query(Lezioni).filter_by(id_corso = id_corso).order_by(Lezioni.data).first())
+    return session.query(Lezioni).filter_by(id_corso = id_corso).order_by(Lezioni.data).first()
+
 # + - - - - - - - - - - - - - - - - - - - - - +
 # | METODI PER RESTITUZIONE DIZIONARI O LISTE |
 # + - - - - - - - - - - - - - - - - - - - - - +
@@ -545,7 +551,7 @@ def get_info_corso(id_corso):
                 "iscritti": get_iscritti(id_corso=corso.id_corso),
                 "prof": prof.nome + " " + prof.cognome,
                 "descrizione": corso.descrizione,
-                "inizio": "15/05/2022"}
+                "inizio": get_primalezione(corso.id_corso).data}
     except Exception as e:
         print("[!] - Errore nella restituzione delle informazioni relative al corso con id: " + id_corso + ", verificare il metodo get_info_corso(...)\n")
         print(e)
